@@ -1,7 +1,8 @@
 {
   "name": "@chatwoot/utils",
-  "version": "0.1.0",
+  "version": "0.0.3",
   "description": "Chatwoot utils",
+  "private": false,
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -18,6 +19,7 @@
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
+    "link": "npm link",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
