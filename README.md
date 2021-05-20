@@ -1,3 +1,3 @@
-# Chatwoot-utils
+# Chatwoot-utils (Work in progress)
 
-Common utils chatwoot.
+Common utils for chatwoot.
