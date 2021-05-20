@@ -1,3 +1,10 @@
+/**
+ * @name Get contrasting text color
+ * @description Get contrasting text color  from a color
+ * @param bgColor  Background color of text.
+ * @returns contrasting text color
+ */
+
 export const getContrastingTextColor = (bgColor: string) => {
   const color = bgColor.replace('#', '');
   const r = parseInt(color.slice(0, 2), 16);
