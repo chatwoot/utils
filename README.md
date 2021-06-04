@@ -19,7 +19,7 @@ yarn add @chatwoot/utils
 
 ### Docs
 
-See [utils.chatwoot.com](https://utils.chatwoot.com/) for more details, API, and other docs.
+See [utils.chatwoot.com](https://www.chatwoot.com/docs/utils) for more details, API, and other docs.
 
 ## Feedback & Contributing
 
