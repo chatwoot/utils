@@ -1,8 +1,6 @@
-<h1>
-Chatwoot-utils
-</h1>
+### Chatwoot-utils
 
-Common utils for chatwoot.
+Common utils for Chatwoot.
 
 ![](https://img.shields.io/npm/v/@chatwoot/utils?style=flat)
 ![](https://img.shields.io/npm/dt/@chatwoot/utils.svg)
@@ -19,7 +17,7 @@ yarn add @chatwoot/utils
 
 ### Docs
 
-See [utils.chatwoot.com](https://www.chatwoot.com/docs/utils) for more details, API, and other docs.
+See [utils.chatwoot.com](https://utils.chatwoot.com) for more details, API, and other docs.
 
 ## Feedback & Contributing
 

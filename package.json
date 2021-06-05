@@ -22,7 +22,7 @@
     "link": "npm link",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "docs": "typedoc --theme default --out docs/docs/utils ./src"
+    "docs": "typedoc --theme default --out docs ./src"
   },
   "peerDependencies": {},
   "husky": {
