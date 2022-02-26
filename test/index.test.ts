@@ -1,5 +1,5 @@
 import format from 'date-fns/format';
-import { getContrastingTextColor, formatDate } from '../src';
+import { getContrastingTextColor, formatDate, formatTime } from '../src';
 
 describe('#getContrastingTextColor', () => {
   it('it should return white color code if #DF4CAB color passed  ', () => {
@@ -42,5 +42,31 @@ describe('#formatDate', () => {
         yesterdayText: 'Yesterday',
       })
     ).toEqual('Today');
+  });
+});
+
+describe('#formatTime', () => {
+  it('it should return time in seconds format if time is less than 60 seconds  ', () => {
+    const start_time = new Date().getTime();
+    const end_time = new Date(new Date().setSeconds(new Date().getSeconds()+30)).getTime();
+    expect(formatTime((end_time - start_time)/1000)).toEqual('30 Sec');
+  });
+
+  it('it should return time in minutes format if time is greater than 60 seconds and less than 3600 seconds', () => {
+    const start_time = new Date().getTime();
+    const end_time = new Date(new Date().setSeconds(new Date().getSeconds()+400)).getTime();
+    expect(formatTime((end_time - start_time)/1000)).toEqual('7 Min');
+  });
+
+  it('it should return time in Hour and Minute format if time is greater than 3600 seconds less than 86400 seconds ', () => {
+    const start_time = new Date().getTime();
+    const end_time = new Date(new Date().setSeconds(new Date().getSeconds()+7800)).getTime();
+    expect(formatTime((end_time - start_time)/1000)).toEqual('2 Hr 10 Min');
+  });
+
+  it('it should return time in Day and Hour format if time is greater than 86400 seconds', () => {
+    const start_time = new Date().getTime();
+    const end_time = new Date(new Date().setSeconds(new Date().getSeconds()+180600)).getTime();
+    expect(formatTime((end_time - start_time)/1000)).toEqual('2 Day 2 Hr');
   });
 });

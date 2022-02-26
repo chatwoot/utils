@@ -37,3 +37,24 @@ export const formatDate = ({
   if (isYesterday(dateValue)) return yesterdayText;
   return date;
 };
+
+export const formatTime = (time_in_seconds: number) => {
+
+  let formattedTime = '';
+  if (time_in_seconds >= 60 && time_in_seconds < 3600) {
+    return `${Math.round(time_in_seconds/60)} Min`
+  }
+  if(time_in_seconds >= 3600 && time_in_seconds < 86400) {
+    const hours = Math.round(time_in_seconds/3600);
+    formattedTime = `${hours} Hr`;
+    const minutes = time_in_seconds%3600 < 60 || hours === 24 ? 0 : Math.round((time_in_seconds%3600)/60);
+    return formattedTime + `${minutes > 0 ? ' ' + minutes + ' Min' : ''}`;
+  }
+  if(time_in_seconds >= 86400) {
+    const days = Math.round(time_in_seconds/86400);
+    formattedTime = `${days} Day`
+    const hours = time_in_seconds%86400 < 3600 || days >= 364 ? 0 : Math.round((time_in_seconds%86400)/3600);
+    return formattedTime + `${hours > 0 ? ' ' + hours + ' Hr' : ''}`;
+  }
+  return `${Math.round(time_in_seconds)} Sec`
+}
