@@ -59,7 +59,7 @@ describe('#formatTime', () => {
     const end_time = new Date(
       new Date().setSeconds(new Date().getSeconds() + 400)
     ).getTime();
-    expect(formatTime((end_time - start_time) / 1000)).toEqual('7 Min');
+    expect(formatTime((end_time - start_time) / 1000)).toEqual('6 Min 40 Sec');
   });
 
   it('it should return time in Hour and Minute format if time is greater than 3600 seconds less than 86400 seconds ', () => {
