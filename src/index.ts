@@ -15,6 +15,7 @@ export const getContrastingTextColor = (bgColor: string): string => {
   // http://stackoverflow.com/a/3943023/112731
   return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? '#000000' : '#FFFFFF';
 };
+
 /**
  * @name Get formatted date
  * @description Get date in today, yesterday or any other date format
@@ -38,23 +39,35 @@ export const formatDate = ({
   return date;
 };
 
-export const formatTime = (time_in_seconds: number) => {
+/**
+ * @name formatTime
+ * @description Format time to Hour, Minute and Second
+ * @param timeInSeconds  number
+ * @returns formatted time
+ */
 
+export const formatTime = (timeInSeconds: number) => {
   let formattedTime = '';
-  if (time_in_seconds >= 60 && time_in_seconds < 3600) {
-    return `${Math.round(time_in_seconds/60)} Min`
+  if (timeInSeconds >= 60 && timeInSeconds < 3600) {
+    return `${Math.round(timeInSeconds / 60)} Min`;
   }
-  if(time_in_seconds >= 3600 && time_in_seconds < 86400) {
-    const hours = Math.round(time_in_seconds/3600);
+  if (timeInSeconds >= 3600 && timeInSeconds < 86400) {
+    const hours = Math.round(timeInSeconds / 3600);
     formattedTime = `${hours} Hr`;
-    const minutes = time_in_seconds%3600 < 60 || hours === 24 ? 0 : Math.round((time_in_seconds%3600)/60);
+    const minutes =
+      timeInSeconds % 3600 < 60 || hours === 24
+        ? 0
+        : Math.round((timeInSeconds % 3600) / 60);
     return formattedTime + `${minutes > 0 ? ' ' + minutes + ' Min' : ''}`;
   }
-  if(time_in_seconds >= 86400) {
-    const days = Math.round(time_in_seconds/86400);
-    formattedTime = `${days} Day`
-    const hours = time_in_seconds%86400 < 3600 || days >= 364 ? 0 : Math.round((time_in_seconds%86400)/3600);
+  if (timeInSeconds >= 86400) {
+    const days = Math.round(timeInSeconds / 86400);
+    formattedTime = `${days} Day`;
+    const hours =
+      timeInSeconds % 86400 < 3600 || days >= 364
+        ? 0
+        : Math.round((timeInSeconds % 86400) / 3600);
     return formattedTime + `${hours > 0 ? ' ' + hours + ' Hr' : ''}`;
   }
-  return `${Math.round(time_in_seconds)} Sec`
-}
+  return `${Math.round(timeInSeconds)} Sec`;
+};
