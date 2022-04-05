@@ -49,25 +49,28 @@ export const formatDate = ({
 export const formatTime = (timeInSeconds: number) => {
   let formattedTime = '';
   if (timeInSeconds >= 60 && timeInSeconds < 3600) {
-    return `${Math.round(timeInSeconds / 60)} Min`;
+    const minutes = Math.floor(timeInSeconds / 60);
+    formattedTime = `${minutes} Min`;
+    const seconds = minutes === 60 ? 0 : Math.floor(timeInSeconds % 60);
+    return formattedTime + `${seconds > 0 ? ' ' + seconds + ' Sec' : ''}`;
   }
   if (timeInSeconds >= 3600 && timeInSeconds < 86400) {
-    const hours = Math.round(timeInSeconds / 3600);
+    const hours = Math.floor(timeInSeconds / 3600);
     formattedTime = `${hours} Hr`;
     const minutes =
       timeInSeconds % 3600 < 60 || hours === 24
         ? 0
-        : Math.round((timeInSeconds % 3600) / 60);
+        : Math.floor((timeInSeconds % 3600) / 60);
     return formattedTime + `${minutes > 0 ? ' ' + minutes + ' Min' : ''}`;
   }
   if (timeInSeconds >= 86400) {
-    const days = Math.round(timeInSeconds / 86400);
+    const days = Math.floor(timeInSeconds / 86400);
     formattedTime = `${days} Day`;
     const hours =
       timeInSeconds % 86400 < 3600 || days >= 364
         ? 0
-        : Math.round((timeInSeconds % 86400) / 3600);
+        : Math.floor((timeInSeconds % 86400) / 3600);
     return formattedTime + `${hours > 0 ? ' ' + hours + ' Hr' : ''}`;
   }
-  return `${Math.round(timeInSeconds)} Sec`;
+  return `${Math.floor(timeInSeconds)} Sec`;
 };
