@@ -76,14 +76,14 @@ export const formatTime = (timeInSeconds: number) => {
 };
 
 /**
- * @name trimString
+ * @name trimContent
  * @description Trim a string to max length
  * @param content String to trim
  * @param maxLength Length of the string to trim, default 1024
  * @param ellipsis Boolean to add dots at the end of the string, default false
  * @returns trimmed string
  */
-export const trimString = (
+export const trimContent = (
   content: string = '',
   maxLength: number = 1024,
   ellipsis: boolean = false

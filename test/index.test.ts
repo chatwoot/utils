@@ -3,7 +3,7 @@ import {
   getContrastingTextColor,
   formatDate,
   formatTime,
-  trimString,
+  trimContent,
 } from '../src';
 
 describe('#getContrastingTextColor', () => {
@@ -84,12 +84,12 @@ describe('#formatTime', () => {
   });
 });
 
-describe('#trimString', () => {
+describe('#trimContent', () => {
   it('trims the string to proper length', () => {
-    expect(trimString('this is an example')).toEqual('this is an example');
-    expect(trimString('this is an example', 3)).toEqual('thi');
+    expect(trimContent('this is an example')).toEqual('this is an example');
+    expect(trimContent('this is an example', 3)).toEqual('thi');
   });
   it('adds ellipsis if passed', () => {
-    expect(trimString('this is an example', 3, true)).toEqual('thi...');
+    expect(trimContent('this is an example', 3, true)).toEqual('thi...');
   });
 });
