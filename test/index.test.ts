@@ -1,5 +1,10 @@
 import format from 'date-fns/format';
-import { getContrastingTextColor, formatDate, formatTime } from '../src';
+import {
+  getContrastingTextColor,
+  formatDate,
+  formatTime,
+  trimString,
+} from '../src';
 
 describe('#getContrastingTextColor', () => {
   it('it should return white color code if #DF4CAB color passed  ', () => {
@@ -76,5 +81,15 @@ describe('#formatTime', () => {
       new Date().setSeconds(new Date().getSeconds() + 180600)
     ).getTime();
     expect(formatTime((end_time - start_time) / 1000)).toEqual('2 Day 2 Hr');
+  });
+});
+
+describe('#trimString', () => {
+  it('trims the string to proper length', () => {
+    expect(trimString('this is an example')).toEqual('this is an example');
+    expect(trimString('this is an example', 3)).toEqual('thi');
+  });
+  it('adds ellipsis if passed', () => {
+    expect(trimString('this is an example', 3, true)).toEqual('thi...');
   });
 });
