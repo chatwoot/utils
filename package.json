@@ -1,6 +1,6 @@
 {
   "name": "@chatwoot/utils",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "Chatwoot utils",
   "private": false,
   "license": "MIT",
@@ -22,7 +22,8 @@
     "link": "npm link",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "docs": "typedoc --theme default --out docs ./src"
+    "docs": "typedoc --theme default --out docs ./src",
+    "publish": "npm publish --access public"
   },
   "peerDependencies": {},
   "husky": {
