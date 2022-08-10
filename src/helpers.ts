@@ -15,9 +15,6 @@ export const getContrastingTextColor = (bgColor: string): string => {
   return r * 0.299 + g * 0.587 + b * 0.114 > 186 ? '#000000' : '#FFFFFF';
 };
 
-
-
-
 /**
  * @name Get formatted date
  * @description Get date in today, yesterday or any other date format
