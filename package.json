@@ -26,11 +26,6 @@
     "publish": "npm publish --access public"
   },
   "peerDependencies": {},
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
@@ -49,19 +44,19 @@
     }
   ],
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^4.10.2",
-    "husky": "^6.0.0",
-    "size-limit": "^4.10.2",
+    "@size-limit/preset-small-lib": "^7.0.8",
+    "husky": "^8.0.1",
+    "size-limit": "^8.0.0",
     "tsdx": "^0.14.1",
     "tslib": "^2.4.0",
-    "typedoc": "^0.21.0",
-    "typescript": "^4.2"
+    "typedoc": "^0.23.10",
+    "typescript": "^4.7"
   },
   "bugs": {
     "url": "https://github.com/chatwoot/utils/issues"
   },
   "homepage": "https://github.com/chatwoot/utils#readme",
   "dependencies": {
-    "date-fns": "^2.22.1"
+    "date-fns": "^2.29.1"
   }
 }
