@@ -1191,28 +1191,28 @@
   dependencies:
     type-detect "4.0.8"
 
-"@size-limit/esbuild@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/@size-limit/esbuild/-/esbuild-8.0.0.tgz#77fe68559b1909d82c2cdd9dd0dfdca377480dfe"
-  integrity sha512-du3gGKAzeh8fKEbqG0PcHKyyilpHTC+z/e6r0a82G+9KMCQd2PBHfOrTyN+of8u6EZXkrp0zdwgr84nKLp1nPg==
+"@size-limit/esbuild@7.0.8":
+  version "7.0.8"
+  resolved "https://registry.npmjs.org/@size-limit/esbuild/-/esbuild-7.0.8.tgz#1dff3b41ab2c2b5b07ec61a124ecb19aa68661d0"
+  integrity sha512-AzCrxJJThDvHrBNoolebYVgXu46c6HuS3fOxoXr3V0YWNM0qz81z5F3j7RruzboZnls8ZgME4WrH6GM5rB9gtA==
   dependencies:
-    esbuild "^0.14.51"
-    nanoid "^3.3.4"
+    esbuild "^0.14.18"
+    nanoid "^3.2.0"
 
-"@size-limit/file@8.0.0":
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/@size-limit/file/-/file-8.0.0.tgz#14ab6f0a64387dbc1b5fff487f7ad1a3d37d9730"
-  integrity sha512-xd4bBk/YyezsMQfpi2V3/blodCuPNVF5UwMd4L9LxBvon0PK4C1+3zBXxZpvN7AcMvPbJ8RUMS+iHpD4KcwaOg==
+"@size-limit/file@7.0.8":
+  version "7.0.8"
+  resolved "https://registry.npmjs.org/@size-limit/file/-/file-7.0.8.tgz#05c43fa01bf164c2fba24e13f1695bf7e861e277"
+  integrity sha512-1KeFQuMXIXAH/iELqIX7x+YNYDFvzIvmxcp9PrdwEoSNL0dXdaDIo9WE/yz8xvOmUcKaLfqbWkL75DM0k91WHQ==
   dependencies:
-    semver "7.3.7"
+    semver "7.3.5"
 
-"@size-limit/preset-small-lib@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/@size-limit/preset-small-lib/-/preset-small-lib-8.0.0.tgz#1c4532e217cd41254130d0dc40f256959ac790ba"
-  integrity sha512-6Q2fJFuPalvANQIoxYAmQLGk1Rxerw/qtqpEi1dhF9czfWxtYxKwlVQgsE/d0j5eum/N7iJxioDeKZQJjzKPrQ==
+"@size-limit/preset-small-lib@^7.0.8":
+  version "7.0.8"
+  resolved "https://registry.npmjs.org/@size-limit/preset-small-lib/-/preset-small-lib-7.0.8.tgz#e787fd1c5cddd51ff02a7a5bef34cbd13e17c2bf"
+  integrity sha512-CT8nIYA/c2CSD+X4rAUgwqYccQMahJ6rBnaZxvi3YKFdkXIbuGNXHNjHsYaFksgwG9P4UjG/unyO5L73f3zQBw==
   dependencies:
-    "@size-limit/esbuild" "8.0.0"
-    "@size-limit/file" "8.0.0"
+    "@size-limit/esbuild" "7.0.8"
+    "@size-limit/file" "7.0.8"
 
 "@types/babel__core@^7.1.7":
   version "7.1.14"
@@ -2540,7 +2540,7 @@ esbuild-windows-arm64@0.14.54:
   resolved "https://registry.npmjs.org/esbuild-windows-arm64/-/esbuild-windows-arm64-0.14.54.tgz#937d15675a15e4b0e4fafdbaa3a01a776a2be982"
   integrity sha512-M0kuUvXhot1zOISQGXwWn6YtS+Y/1RT9WrVIOywZnJHo3jCDyewAc79aKNQWFCQm+xNHVTq9h8dZKvygoXQQRg==
 
-esbuild@^0.14.51:
+esbuild@^0.14.18:
   version "0.14.54"
   resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.14.54.tgz#8b44dcf2b0f1a66fc22459943dccf477535e9aa2"
   integrity sha512-Cy9llcy8DvET5uznocPyqL3BFRrFXSVqbgpMJ9Wz8oVjZlh/zUSNbPRbov0VX7VxN2JH1Oa0uNxZ7eLRb62pJA==
@@ -4626,7 +4626,7 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nanoid@^3.3.4:
+nanoid@^3.2.0:
   version "3.3.4"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
@@ -5595,16 +5595,9 @@ semver@7.0.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.0.0.tgz#5f3ca35761e47e05b206c6daff2cf814f0316b8e"
   integrity sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
 
-semver@7.3.7:
-  version "7.3.7"
-  resolved "https://registry.npmjs.org/semver/-/semver-7.3.7.tgz#12c5b649afdbf9049707796e22a4028814ce523f"
-  integrity sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==
-  dependencies:
-    lru-cache "^6.0.0"
-
-semver@^7.1.1, semver@^7.3.2:
+semver@7.3.5, semver@^7.1.1, semver@^7.3.2:
   version "7.3.5"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
+  resolved "https://registry.npmjs.org/semver/-/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
   integrity sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==
   dependencies:
     lru-cache "^6.0.0"
