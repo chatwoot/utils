@@ -16,10 +16,10 @@ export const debounce = (
 ) => {
   let timeout: number | undefined | null;
 
-  return function () {
+  return function() {
     const context = null;
     const args = arguments;
-    const later = function () {
+    const later = function() {
       timeout = null;
       if (!immediate) func.apply(context, args as any);
     };
