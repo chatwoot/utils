@@ -7,7 +7,7 @@
  * @func Callback function to be called after delay
  * @delay Delay for debounce in ms
  * @immediate should execute immediately
- * @returns debounced callaback function
+ * @returns debounced callback function
  */
 export const debounce = (
   func: (args: any) => void,
@@ -16,10 +16,10 @@ export const debounce = (
 ) => {
   let timeout: number | undefined | null;
 
-  return function() {
+  return function () {
     const context = null;
     const args = arguments;
-    const later = function() {
+    const later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args as any);
     };
