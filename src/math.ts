@@ -72,8 +72,7 @@ export const getQuantileIntervals = (data: number[], intervals: number[]) => {
   // Sort the array in ascending order before looping through the intervals.
   // depending on the size of the array and the number of intervals, this can speed up the process by at least twice
   // for a random array of 100 numbers and 5 intervals, the speedup is 3x
-  // P.S. .slice() is used to create a copy of the array so that the original array is not mutated
-  const sorted = sortAsc(data.slice());
+  const sorted = sortAsc(data);
 
   return intervals.map(interval => {
     return _quantileForSorted(sorted, interval);
