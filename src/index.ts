@@ -7,6 +7,7 @@ import {
 } from './helpers';
 
 import { parseBoolean } from './string';
+import { sortAsc, quantile, clamp, getQuantileIntervals } from './math';
 
 export {
   debounce,
@@ -15,4 +16,8 @@ export {
   getContrastingTextColor,
   trimContent,
   parseBoolean,
+  sortAsc,
+  quantile,
+  clamp,
+  getQuantileIntervals,
 };
