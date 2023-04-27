@@ -1,4 +1,4 @@
-import { Conversation, Sender } from './types/conversation';
+import { Conversation, Sender, Variables } from './types/conversation';
 const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
 const skipCodeBlocks = (str: string) => str.replace(/```(?:.|\n)+?```/g, '');
@@ -51,8 +51,9 @@ export const replaceVariablesInMessage = ({
   variables,
 }: {
   message: string;
-  variables: any; 
+  variables: Variables;
 }) => {
+  // @ts-ignore
   return message.replace(MESSAGE_VARIABLES_REGEX, (_, replace) => {
     return variables[replace.trim()]
       ? variables[replace.trim().toLowerCase()]
@@ -65,7 +66,7 @@ export const getUndefinedVariablesInMessage = ({
   variables,
 }: {
   message: string;
-  variables: any;
+  variables: Variables;
 }) => {
   const messageWithOutCodeBlocks = skipCodeBlocks(message);
   const matches = messageWithOutCodeBlocks.match(MESSAGE_VARIABLES_REGEX);

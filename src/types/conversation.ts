@@ -21,3 +21,7 @@ export interface Assignee {
   name?: string;
   phone_number?: string;
 }
+
+export interface Variables {
+  [key: string]: string | number;
+}
