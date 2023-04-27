@@ -9,10 +9,7 @@ import {
 import { parseBoolean } from './string';
 import { sortAsc, quantile, clamp, getQuantileIntervals } from './math';
 import {
-  getFirstName,
-  getLastName,
   getMessageVariables,
-  capitalizeName,
   replaceVariablesInMessage,
   getUndefinedVariablesInMessage,
 } from './canned';
@@ -28,10 +25,7 @@ export {
   quantile,
   clamp,
   getQuantileIntervals,
-  getFirstName,
-  getLastName,
   getMessageVariables,
-  capitalizeName,
   replaceVariablesInMessage,
   getUndefinedVariablesInMessage,
 };
