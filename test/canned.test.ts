@@ -167,4 +167,7 @@ describe('#capitalizeName', () => {
     const string = 'doe';
     expect(capitalizeName(string)).toBe('Doe');
   });
+  it('returns empty string if the name is null', () => {
+    expect(capitalizeName(null)).toBe('');
+  });
 });

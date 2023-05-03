@@ -3,8 +3,8 @@ const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
 const skipCodeBlocks = (str: string) => str.replace(/```(?:.|\n)+?```/g, '');
 
-export const capitalizeName = (name: string) => {
-  return name.replace(/\b(\w)/g, s => s.toUpperCase());
+export const capitalizeName = (name: string | null) => {
+  return (name || '').replace(/\b(\w)/g, s => s.toUpperCase());
 };
 
 export const getFirstName = ({ user }: { user: Sender }) => {
