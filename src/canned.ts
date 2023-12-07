@@ -1,4 +1,9 @@
-import { Conversation, Sender, Variables } from './types/conversation';
+import {
+  Conversation,
+  Sender,
+  Variables,
+  CustomAttributes,
+} from './types/conversation';
 const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
 const skipCodeBlocks = (str: string) => str.replace(/```(?:.|\n)+?```/g, '');
@@ -29,9 +34,11 @@ export const getMessageVariables = ({
   const {
     meta: { assignee, sender },
     id,
+    custom_attributes: conversationCustomAttributes = {},
   } = conversation;
+  const { custom_attributes: contactCustomAttributes } = sender || {};
 
-  return {
+  const standardVariables = {
     'contact.name': capitalizeName(sender?.name || ''),
     'contact.first_name': getFirstName({ user: sender }),
     'contact.last_name': getLastName({ user: sender }),
@@ -44,6 +51,27 @@ export const getMessageVariables = ({
     'agent.last_name': getLastName({ user: assignee }),
     'agent.email': assignee?.email ?? '',
   };
+  const conversationCustomAttributeVariables = Object.entries(
+    conversationCustomAttributes as CustomAttributes
+  ).reduce((acc: CustomAttributes, [key, value]) => {
+    acc[`conversation.custom_attribute.${key}`] = value;
+    return acc;
+  }, {});
+
+  const contactCustomAttributeVariables = Object.entries(
+    contactCustomAttributes as CustomAttributes
+  ).reduce((acc: CustomAttributes, [key, value]) => {
+    acc[`contact.custom_attribute.${key}`] = value;
+    return acc;
+  }, {});
+
+  const variables = {
+    ...standardVariables,
+    ...conversationCustomAttributeVariables,
+    ...contactCustomAttributeVariables,
+  };
+
+  return variables;
 };
 
 export const replaceVariablesInMessage = ({
