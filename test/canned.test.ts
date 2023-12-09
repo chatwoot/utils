@@ -98,9 +98,14 @@ describe('#getMessageVariables', () => {
           name: 'john Doe',
           email: 'john.doe@gmail.com',
           phone_number: '1234567890',
+          custom_attributes: { priority: 'high' },
         },
       },
       id: 1,
+      custom_attributes: {
+        car_model: 'Tesla Model S',
+        car_year: '2022',
+      },
     };
     expect(getMessageVariables({ conversation })).toEqual({
       'contact.name': 'John Doe',
@@ -114,6 +119,9 @@ describe('#getMessageVariables', () => {
       'agent.first_name': 'Samuel',
       'agent.last_name': 'Smith',
       'agent.email': 'samuel@example.com',
+      'contact.custom_attribute.priority': 'high',
+      'conversation.custom_attribute.car_model': 'Tesla Model S',
+      'conversation.custom_attribute.car_year': '2022',
     });
   });
 });

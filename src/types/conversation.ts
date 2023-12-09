@@ -1,6 +1,7 @@
 export interface Conversation {
   meta: Meta;
   id: number;
+  custom_attributes: CustomAttributes;
 }
 
 export interface Meta {
@@ -13,6 +14,7 @@ export interface Sender {
   email?: string;
   name?: string;
   phone_number?: string;
+  custom_attributes?: CustomAttributes;
 }
 
 export interface Assignee {
@@ -24,4 +26,8 @@ export interface Assignee {
 
 export interface Variables {
   [key: string]: string | number;
+}
+
+export interface CustomAttributes {
+  [key: string]: any;
 }
