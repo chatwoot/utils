@@ -29,7 +29,7 @@ export const getLastName = ({ user }: { user: Sender }) => {
 
 export const getMessageVariables = ({
   conversation,
-  contact
+  contact,
 }: {
   conversation: Conversation;
   contact?: Contact;
