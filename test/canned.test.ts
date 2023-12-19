@@ -98,7 +98,6 @@ describe('#getMessageVariables', () => {
           name: 'john Doe',
           email: 'john.doe@gmail.com',
           phone_number: '1234567890',
-          custom_attributes: { priority: 'high' },
         },
       },
       id: 1,
@@ -107,7 +106,15 @@ describe('#getMessageVariables', () => {
         car_year: '2022',
       },
     };
-    expect(getMessageVariables({ conversation })).toEqual({
+    const contact = {
+      id: 3,
+      name: 'john Doe',
+      email: 'john.doe@gmail.com',
+      phone_number: '1234567890',
+      custom_attributes: { priority: 'high' },
+    };
+
+    expect(getMessageVariables({ conversation, contact })).toEqual({
       'contact.name': 'John Doe',
       'contact.first_name': 'John',
       'contact.id': 3,
