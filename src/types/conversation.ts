@@ -17,6 +17,14 @@ export interface Sender {
   custom_attributes?: CustomAttributes;
 }
 
+export interface Contact {
+  id: number;
+  email?: string;
+  name?: string;
+  phone_number?: string;
+  custom_attributes?: CustomAttributes;
+}
+
 export interface Assignee {
   id: number;
   email?: string;

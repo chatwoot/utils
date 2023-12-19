@@ -3,6 +3,7 @@ import {
   Sender,
   Variables,
   CustomAttributes,
+  Contact,
 } from './types/conversation';
 const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
@@ -28,15 +29,17 @@ export const getLastName = ({ user }: { user: Sender }) => {
 
 export const getMessageVariables = ({
   conversation,
+  contact
 }: {
   conversation: Conversation;
+  contact?: Contact;
 }) => {
   const {
     meta: { assignee, sender },
     id,
     custom_attributes: conversationCustomAttributes = {},
   } = conversation;
-  const { custom_attributes: contactCustomAttributes } = sender || {};
+  const { custom_attributes: contactCustomAttributes } = contact || {};
 
   const standardVariables = {
     'contact.name': capitalizeName(sender?.name || ''),
