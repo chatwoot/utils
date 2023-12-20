@@ -111,6 +111,6 @@ export const getUndefinedVariablesInMessage = ({
         .trim();
     })
     .filter(variable => {
-      return !variables[variable];
+      return variables[variable] === undefined;
     });
 };

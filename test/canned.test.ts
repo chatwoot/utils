@@ -17,6 +17,7 @@ const variables = {
   'agent.first_name': 'Samuel',
   'agent.last_name': 'Smith',
   'agent.email': 'samuel@gmail.com',
+  'contact.custom_attribute.cloud_customer': false,
 };
 
 describe('#replaceVariablesInMessage', () => {
@@ -135,12 +136,12 @@ describe('#getMessageVariables', () => {
 
 describe('#getUndefinedVariablesInMessage', () => {
   it('returns the undefined variables', () => {
-    const message = 'Please dm me at {{contact.twitter}}';
+    const message = 'It seems like you are facing issues with {{contact.integration}}, the cloud customer is {{contact.custom_attribute.cloud_customer}}';
     expect(
       getUndefinedVariablesInMessage({ message, variables }).length
     ).toEqual(1);
     expect(getUndefinedVariablesInMessage({ message, variables })).toEqual(
-      expect.arrayContaining(['contact.twitter'])
+      expect.arrayContaining(['contact.integration'])
     );
   });
   it('skip variables in string with code blocks', () => {
