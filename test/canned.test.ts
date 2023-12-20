@@ -136,7 +136,8 @@ describe('#getMessageVariables', () => {
 
 describe('#getUndefinedVariablesInMessage', () => {
   it('returns the undefined variables', () => {
-    const message = 'It seems like you are facing issues with {{contact.integration}}, the cloud customer is {{contact.custom_attribute.cloud_customer}}';
+    const message =
+      'It seems like you are facing issues with {{contact.integration}}, the cloud customer is {{contact.custom_attribute.cloud_customer}}';
     expect(
       getUndefinedVariablesInMessage({ message, variables }).length
     ).toEqual(1);

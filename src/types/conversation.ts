@@ -33,7 +33,7 @@ export interface Assignee {
 }
 
 export interface Variables {
-  [key: string]: string | number| boolean
+  [key: string]: string | number | boolean;
 }
 
 export interface CustomAttributes {
