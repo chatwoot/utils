@@ -14,6 +14,8 @@ import {
   getUndefinedVariablesInMessage,
 } from './canned';
 
+import { createTypingIndicator } from './typingStatus';
+
 export {
   debounce,
   formatTime,
@@ -28,4 +30,5 @@ export {
   getMessageVariables,
   replaceVariablesInMessage,
   getUndefinedVariablesInMessage,
+  createTypingIndicator,
 };
