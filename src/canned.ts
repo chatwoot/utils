@@ -85,7 +85,7 @@ export const replaceVariablesInMessage = ({
   variables: Variables;
 }) => {
   // @ts-ignore
-  return message.replace(MESSAGE_VARIABLES_REGEX, (_, replace) => {
+  return message?.replace(MESSAGE_VARIABLES_REGEX, (_, replace) => {
     return variables[replace.trim()]
       ? variables[replace.trim().toLowerCase()]
       : '';
