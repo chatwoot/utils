@@ -108,7 +108,10 @@ export const trimContent = (
  * convertToUnit(60, { minute: 'Minutes', hour: 'Hours', day: 'Days' }); // { time: 1, unit: 'Minutes' }
  */
 
-export const convertSecondsToTimeUnit = (seconds: number, unitNames: { minute: string, hour: string, day: string }) => {
+export const convertSecondsToTimeUnit = (
+  seconds: number,
+  unitNames: { minute: string; hour: string; day: string }
+) => {
   if (seconds === null || seconds === 0)
     return { time: null, unit: unitNames.minute };
   if (seconds < 3600)
@@ -116,4 +119,4 @@ export const convertSecondsToTimeUnit = (seconds: number, unitNames: { minute: s
   if (seconds < 86400)
     return { time: Number((seconds / 3600).toFixed(1)), unit: unitNames.hour };
   return { time: Number((seconds / 86400).toFixed(1)), unit: unitNames.day };
-}
+};
