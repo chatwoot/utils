@@ -4,6 +4,7 @@ import {
   formatDate,
   getContrastingTextColor,
   trimContent,
+  convertSecondsToTimeUnit,
 } from './helpers';
 
 import { parseBoolean } from './string';
@@ -31,4 +32,5 @@ export {
   replaceVariablesInMessage,
   getUndefinedVariablesInMessage,
   createTypingIndicator,
+  convertSecondsToTimeUnit,
 };
