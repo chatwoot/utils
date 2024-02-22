@@ -96,3 +96,27 @@ export const trimContent = (
   }
   return trimmedContent;
 };
+
+/**
+ * @name convertSecondsToTimeUnit
+ * @description Convert seconds to time unit
+ * @param seconds  number
+ * @param unitNames  object
+ * @returns time and unit
+ * @example
+ * convertToUnit(60, { minute: 'm', hour: 'h', day: 'd' }); // { time: 1, unit: 'm' }
+ * convertToUnit(60, { minute: 'Minutes', hour: 'Hours', day: 'Days' }); // { time: 1, unit: 'Minutes' }
+ */
+
+export const convertSecondsToTimeUnit = (
+  seconds: number,
+  unitNames: { minute: string; hour: string; day: string }
+) => {
+  if (seconds === null || seconds === 0)
+    return { time: null, unit: unitNames.minute };
+  if (seconds < 3600)
+    return { time: Number((seconds / 60).toFixed(1)), unit: unitNames.minute };
+  if (seconds < 86400)
+    return { time: Number((seconds / 3600).toFixed(1)), unit: unitNames.hour };
+  return { time: Number((seconds / 86400).toFixed(1)), unit: unitNames.day };
+};
