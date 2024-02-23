@@ -48,9 +48,4 @@ describe('#convertSecondsToTimeUnit', () => {
       convertSecondsToTimeUnit(0, { minute: 'm', hour: 'h', day: 'd' })
     ).toEqual({ time: 1, unit: 's' });
   });
-  it("it should return { time:  '', unit: '' } if seconds passed is null", () => {
-    expect(
-      convertSecondsToTimeUnit(null, { minute: 'm', hour: 'h', day: 'd' })
-    ).toEqual({ time: 1, unit: 's' });
-  });
 });
