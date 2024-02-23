@@ -112,8 +112,7 @@ export const convertSecondsToTimeUnit = (
   seconds: number,
   unitNames: { minute: string; hour: string; day: string }
 ) => {
-  if (seconds === null || seconds === 0)
-    return { time: '', unit: ''};
+  if (seconds === null || seconds === 0) return { time: '', unit: '' };
   if (seconds < 3600)
     return { time: Number((seconds / 60).toFixed(1)), unit: unitNames.minute };
   if (seconds < 86400)
