@@ -2,10 +2,13 @@ export interface Conversation {
   meta: Meta;
   id: number;
   custom_attributes: CustomAttributes;
+  first_reply_created_at: number;
+  waiting_since: number;
+  status: string;
 }
 
 export interface Meta {
-  assignee: Assignee;
+  assignee: Assignee | null;
   sender: Sender;
 }
 
