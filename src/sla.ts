@@ -1,6 +1,12 @@
 import { Conversation } from './types/conversation';
 import { AppliedSla, SLAStatus } from './types/sla';
 
+/**
+ * Calculates the threshold for an SLA based on the current time and the provided threshold.
+ * @param timeOffset - The time offset in seconds.
+ * @param threshold - The threshold in seconds or null if not applicable.
+ * @returns The calculated threshold in seconds or null if the threshold is null.
+ */
 const calculateThreshold = (
   timeOffset: number,
   threshold: number | null
@@ -11,6 +17,11 @@ const calculateThreshold = (
   return timeOffset + threshold - currentTime;
 };
 
+/**
+ * Finds the most urgent SLA status based on the threshold.
+ * @param SLAStatuses - An array of SLAStatus objects.
+ * @returns The most urgent SLAStatus object.
+ */
 const findMostUrgentSLAStatus = (SLAStatuses: SLAStatus[]): SLAStatus => {
   // Sort the SLAs based on the threshold and return the most urgent SLA
   SLAStatuses.sort(
@@ -19,6 +30,11 @@ const findMostUrgentSLAStatus = (SLAStatuses: SLAStatus[]): SLAStatus => {
   return SLAStatuses[0];
 };
 
+/**
+ * Formats the SLA time in a human-readable format.
+ * @param seconds - The time in seconds.
+ * @returns A formatted string representing the time.
+ */
 const formatSLATime = (seconds: number): string => {
   const units: { [key: string]: number } = {
     y: 31536000, // 60 * 60 * 24 * 365
@@ -47,6 +63,13 @@ const formatSLATime = (seconds: number): string => {
   return parts.join(' ');
 };
 
+/**
+ * Creates an SLA object based on the type, applied SLA, and chat details.
+ * @param type - The type of SLA (FRT, NRT, RT).
+ * @param appliedSla - The applied SLA details.
+ * @param chat - The chat details.
+ * @returns An object containing the SLA status or null if conditions are not met.
+ */
 const createSLAObject = (
   type: string,
   appliedSla: AppliedSla,
@@ -64,7 +87,7 @@ const createSLAObject = (
     waiting_since: waitingSince,
     status,
   } = chat;
-  // Mapping of breach types to their logic
+
   const SLATypes: {
     [key: string]: { threshold: number | null; condition: boolean };
   } = {
@@ -92,6 +115,12 @@ const createSLAObject = (
   return SLAStatus ? { ...SLAStatus, type } : null;
 };
 
+/**
+ * Evaluates SLA conditions and returns an array of SLAStatus objects.
+ * @param appliedSla - The applied SLA details.
+ * @param chat - The chat details.
+ * @returns An array of SLAStatus objects.
+ */
 const evaluateSLAConditions = (
   appliedSla: AppliedSla,
   chat: Conversation
@@ -117,6 +146,13 @@ const evaluateSLAConditions = (
     }));
 };
 
+/**
+ * Evaluates the SLA status for a given chat and applied SLA.
+ * @param {Object} params - The parameters object.
+ * @param params.appliedSla - The applied SLA details.
+ * @param params.chat - The chat details.
+ * @returns An object containing the most urgent SLA status.
+ */
 export const evaluateSLAStatus = ({
   appliedSla,
   chat,
