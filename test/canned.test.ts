@@ -106,6 +106,9 @@ describe('#getMessageVariables', () => {
         car_model: 'Tesla Model S',
         car_year: '2022',
       },
+      first_reply_created_at: 0,
+      waiting_since: 0,
+      status: 'open',
     };
     const contact = {
       id: 3,
