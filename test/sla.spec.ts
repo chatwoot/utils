@@ -26,7 +26,9 @@ describe('SLAHelper', () => {
       };
       const chat = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },
@@ -64,7 +66,9 @@ describe('SLAHelper', () => {
       };
       const chat = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },
@@ -98,7 +102,9 @@ describe('SLAHelper', () => {
 
       const chat = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },
@@ -131,7 +137,9 @@ describe('SLAHelper', () => {
       };
       const chat = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },
@@ -164,7 +172,9 @@ describe('SLAHelper', () => {
       };
       const chatMissed = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },
@@ -197,7 +207,9 @@ describe('SLAHelper', () => {
       };
       const chat = {
         meta: {
-          assignee: null,
+          assignee: {
+            id: 1,
+          },
           sender: {
             id: 1,
           },

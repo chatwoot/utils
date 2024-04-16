@@ -8,7 +8,7 @@ export interface Conversation {
 }
 
 export interface Meta {
-  assignee: Assignee | null;
+  assignee: Assignee;
   sender: Sender;
 }
 
