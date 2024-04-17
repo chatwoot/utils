@@ -17,6 +17,8 @@ import {
 
 import { createTypingIndicator } from './typingStatus';
 
+import { evaluateSLAStatus } from './sla';
+
 export {
   debounce,
   formatTime,
@@ -33,4 +35,5 @@ export {
   getUndefinedVariablesInMessage,
   createTypingIndicator,
   convertSecondsToTimeUnit,
+  evaluateSLAStatus,
 };
