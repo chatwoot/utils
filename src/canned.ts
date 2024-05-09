@@ -55,14 +55,14 @@ export const getMessageVariables = ({
     'agent.email': assignee?.email ?? '',
   };
   const conversationCustomAttributeVariables = Object.entries(
-    conversationCustomAttributes as CustomAttributes
+    conversationCustomAttributes ?? {}
   ).reduce((acc: CustomAttributes, [key, value]) => {
     acc[`conversation.custom_attribute.${key}`] = value;
     return acc;
   }, {});
 
   const contactCustomAttributeVariables = Object.entries(
-    contactCustomAttributes as CustomAttributes
+    contactCustomAttributes ?? {}
   ).reduce((acc: CustomAttributes, [key, value]) => {
     acc[`contact.custom_attribute.${key}`] = value;
     return acc;
