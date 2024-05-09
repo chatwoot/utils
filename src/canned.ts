@@ -55,7 +55,7 @@ export const getMessageVariables = ({
     'agent.email': assignee?.email ?? '',
   };
   const conversationCustomAttributeVariables = Object.entries(
-    conversationCustomAttributes
+    conversationCustomAttributes ?? {}
   ).reduce((acc: CustomAttributes, [key, value]) => {
     acc[`conversation.custom_attribute.${key}`] = value;
     return acc;
