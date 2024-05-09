@@ -61,19 +61,12 @@ export const getMessageVariables = ({
     return acc;
   }, {});
 
-  let contactCustomAttributeVariables = {};
-
-  if (
-    contactCustomAttributes &&
-    Object.keys(contactCustomAttributes).length === 0
-  ) {
-    contactCustomAttributeVariables = Object.entries(
-      contactCustomAttributes
-    ).reduce((acc: CustomAttributes, [key, value]) => {
-      acc[`contact.custom_attribute.${key}`] = value;
-      return acc;
-    }, {});
-  }
+  const contactCustomAttributeVariables = Object.entries(
+    contactCustomAttributes ?? {}
+  ).reduce((acc: CustomAttributes, [key, value]) => {
+    acc[`contact.custom_attribute.${key}`] = value;
+    return acc;
+  }, {});
 
   const variables = {
     ...standardVariables,
