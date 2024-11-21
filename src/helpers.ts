@@ -119,3 +119,34 @@ export const convertSecondsToTimeUnit = (
     return { time: Number((seconds / 3600).toFixed(1)), unit: unitNames.hour };
   return { time: Number((seconds / 86400).toFixed(1)), unit: unitNames.day };
 };
+
+/**
+ * @name fileNameWithEllipsis
+ * @description Truncates a filename while preserving the extension
+ * @param {Object} file - File object containing filename or name property
+ * @param {number} [maxLength=26] - Maximum length of the filename (excluding extension)
+ * @param {string} [ellipsis='…'] - Character to use for truncation
+ * @returns {string} Truncated filename with extension
+ * @example
+ * fileNameWithEllipsis({ filename: 'very-long-filename.pdf' }, 10) // 'very-long-f….pdf'
+ * fileNameWithEllipsis({ name: 'short.txt' }, 10) // 'short.txt'
+ */
+export const fileNameWithEllipsis = (
+  file: { filename?: string; name?: string },
+  maxLength: number = 26,
+  ellipsis: string = '…'
+): string => {
+  const fullName = file?.filename ?? file?.name ?? 'Untitled';
+
+  const dotIndex = fullName.lastIndexOf('.');
+  if (dotIndex === -1) return fullName;
+
+  const [name, extension] = [
+    fullName.slice(0, dotIndex),
+    fullName.slice(dotIndex),
+  ];
+
+  if (name.length <= maxLength) return fullName;
+
+  return `${name.slice(0, maxLength)}${ellipsis}${extension}`;
+};
