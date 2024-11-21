@@ -5,6 +5,7 @@ import {
   getContrastingTextColor,
   trimContent,
   convertSecondsToTimeUnit,
+  fileNameWithEllipsis,
 } from './helpers';
 
 import { parseBoolean } from './string';
@@ -35,5 +36,6 @@ export {
   getUndefinedVariablesInMessage,
   createTypingIndicator,
   convertSecondsToTimeUnit,
+  fileNameWithEllipsis,
   evaluateSLAStatus,
 };
