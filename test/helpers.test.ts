@@ -1,4 +1,8 @@
-import { convertSecondsToTimeUnit, fileNameWithEllipsis, splitName } from '../src/helpers';
+import {
+  convertSecondsToTimeUnit,
+  fileNameWithEllipsis,
+  splitName,
+} from '../src/helpers';
 
 describe('#convertSecondsToTimeUnit', () => {
   it("it should return { time:  1, unit: 'm' } if  60 seconds passed", () => {
@@ -93,35 +97,34 @@ describe('fileNameWithEllipsis', () => {
     const file = { name: 'a.txt' };
     expect(fileNameWithEllipsis(file)).toBe('a.txt');
   });
-
 });
 
 describe('splitName', () => {
   it('splits a basic first and last name', () => {
     expect(splitName('John Doe')).toEqual({
       firstName: 'John',
-      lastName: 'Doe'
+      lastName: 'Doe',
     });
   });
 
   it('handles single name', () => {
     expect(splitName('John')).toEqual({
       firstName: 'John',
-      lastName: ''
+      lastName: '',
     });
   });
 
   it('handles empty string', () => {
     expect(splitName('Mary John Ann')).toEqual({
       firstName: 'Mary John',
-      lastName: 'Ann'
+      lastName: 'Ann',
     });
   });
 
   it('handles extra whitespace', () => {
     expect(splitName('   Jane    Doe   ')).toEqual({
       firstName: 'Jane',
-      lastName: 'Doe'
+      lastName: 'Doe',
     });
   });
 });

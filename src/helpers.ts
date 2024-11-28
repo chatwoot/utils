@@ -162,12 +162,14 @@ export const fileNameWithEllipsis = (
  * splitName('John Doe') // { firstName: 'John', lastName: 'Doe' }
  * splitName('') // { firstName: '', lastName: '' }
  */
-export const splitName = (fullName: string): { firstName: string; lastName: string } => {
+export const splitName = (
+  fullName: string
+): { firstName: string; lastName: string } => {
   const trimmedName = fullName.trim();
   if (!trimmedName) {
     return {
       firstName: '',
-      lastName: ''
+      lastName: '',
     };
   }
 
@@ -178,7 +180,7 @@ export const splitName = (fullName: string): { firstName: string; lastName: stri
   if (nameParts.length === 1) {
     return {
       firstName: nameParts[0],
-      lastName: ''
+      lastName: '',
     };
   }
 
@@ -186,6 +188,5 @@ export const splitName = (fullName: string): { firstName: string; lastName: stri
   const lastName = nameParts.pop() || '';
   const firstName = nameParts.join(' ');
 
-  return { firstName, lastName
+  return { firstName, lastName };
 };
-}
