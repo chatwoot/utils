@@ -150,3 +150,42 @@ export const fileNameWithEllipsis = (
 
   return `${name.slice(0, maxLength)}${ellipsis}${extension}`;
 };
+
+/**
+ * @name splitName
+ * @description Splits a full name into firstName and lastName
+ * @param {string} name - Full name of the user
+ * @returns {Object} Object with firstName and lastName
+ * @example
+ * splitName('Mary Jane Smith') // { firstName: 'Mary Jane', lastName: 'Smith' }
+ * splitName('Alice') // { firstName: 'Alice', lastName: '' }
+ * splitName('John Doe') // { firstName: 'John', lastName: 'Doe' }
+ * splitName('') // { firstName: '', lastName: '' }
+ */
+export const splitName = (fullName: string): { firstName: string; lastName: string } => {
+  const trimmedName = fullName.trim();
+  if (!trimmedName) {
+    return {
+      firstName: '',
+      lastName: ''
+    };
+  }
+
+  // Split the name by spaces
+  const nameParts = trimmedName.split(/\s+/);
+
+  // If only one word, treat it as firstName
+  if (nameParts.length === 1) {
+    return {
+      firstName: nameParts[0],
+      lastName: ''
+    };
+  }
+
+  // Last element is lastName, everything else is firstName
+  const lastName = nameParts.pop() || '';
+  const firstName = nameParts.join(' ');
+
+  return { firstName, lastName
+};
+}
