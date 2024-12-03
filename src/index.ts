@@ -6,6 +6,7 @@ import {
   trimContent,
   convertSecondsToTimeUnit,
   fileNameWithEllipsis,
+  splitName,
 } from './helpers';
 
 import { parseBoolean } from './string';
@@ -21,21 +22,22 @@ import { createTypingIndicator } from './typingStatus';
 import { evaluateSLAStatus } from './sla';
 
 export {
-  debounce,
-  formatTime,
-  formatDate,
-  getContrastingTextColor,
-  trimContent,
-  parseBoolean,
-  sortAsc,
-  quantile,
   clamp,
-  getQuantileIntervals,
-  getMessageVariables,
-  replaceVariablesInMessage,
-  getUndefinedVariablesInMessage,
-  createTypingIndicator,
   convertSecondsToTimeUnit,
-  fileNameWithEllipsis,
+  createTypingIndicator,
+  debounce,
   evaluateSLAStatus,
+  fileNameWithEllipsis,
+  formatDate,
+  formatTime,
+  getContrastingTextColor,
+  getMessageVariables,
+  getQuantileIntervals,
+  getUndefinedVariablesInMessage,
+  parseBoolean,
+  quantile,
+  replaceVariablesInMessage,
+  sortAsc,
+  splitName,
+  trimContent,
 };

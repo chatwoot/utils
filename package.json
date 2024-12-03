@@ -1,6 +1,6 @@
 {
   "name": "@chatwoot/utils",
-  "version": "0.0.28",
+  "version": "0.0.30",
   "description": "Chatwoot utils",
   "private": false,
   "license": "MIT",
@@ -24,7 +24,6 @@
     "analyze": "size-limit --why",
     "docs": "typedoc --theme default --out docs ./src"
   },
-  "peerDependencies": {},
   "prettier": {
     "printWidth": 80,
     "semi": true,
@@ -44,6 +43,7 @@
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "^7.0.8",
+    "@types/jest": "^29.5.14",
     "husky": "^8.0.1",
     "size-limit": "^8.0.0",
     "tsdx": "^0.14.1",
