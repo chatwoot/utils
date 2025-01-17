@@ -2,6 +2,7 @@ import {
   convertSecondsToTimeUnit,
   fileNameWithEllipsis,
   splitName,
+  downloadFile,
 } from '../src/helpers';
 
 describe('#convertSecondsToTimeUnit', () => {
@@ -125,6 +126,94 @@ describe('splitName', () => {
     expect(splitName('   Jane    Doe   ')).toEqual({
       firstName: 'Jane',
       lastName: 'Doe',
+    });
+  });
+});
+
+describe('downloadFile', () => {
+  let mockFetch: jest.Mock;
+  let mockCreateObjectURL: jest.Mock;
+  let mockDOMElement: { [key: string]: jest.Mock | string };
+
+  beforeEach(() => {
+    // Mock fetch
+    mockFetch = jest.fn();
+    global.fetch = mockFetch;
+
+    // Mock URL methods
+    mockCreateObjectURL = jest.fn(() => 'blob:mock-url');
+    URL.createObjectURL = mockCreateObjectURL;
+    URL.revokeObjectURL = jest.fn();
+
+    // Mock DOM element
+    mockDOMElement = {
+      click: jest.fn(),
+      remove: jest.fn(),
+      href: '',
+      download: '',
+    };
+    document.createElement = jest.fn().mockReturnValue(mockDOMElement);
+    document.body.append = jest.fn();
+  });
+
+  afterEach(() => jest.clearAllMocks());
+
+  describe('successful downloads', () => {
+    it('should download PDF file', async () => {
+      const blob = new Blob(['test'], { type: 'application/pdf' });
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        blob: () => Promise.resolve(blob),
+        headers: new Headers({ 'content-type': 'application/pdf' }),
+      });
+
+      await downloadFile({
+        url: 'test.com/doc.pdf',
+        type: 'pdf',
+        extension: 'pdf',
+      });
+
+      expect(mockFetch).toHaveBeenCalledWith('test.com/doc.pdf');
+      expect(mockCreateObjectURL).toHaveBeenCalledWith(blob);
+      expect(mockDOMElement.click).toHaveBeenCalled();
+    });
+
+    it('should download image file with content disposition', async () => {
+      const blob = new Blob(['test'], { type: 'image/png' });
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        blob: () => Promise.resolve(blob),
+        headers: new Headers({
+          'content-type': 'image/png',
+          'content-disposition': 'attachment; filename="test.png"',
+        }),
+      });
+
+      await downloadFile({
+        url: 'test.com/image.png',
+        type: 'image',
+        extension: 'png',
+      });
+
+      expect(mockDOMElement.download).toBe('test.png');
+    });
+  });
+
+  describe('error handling', () => {
+    it('should skip if url or type missing', async () => {
+      await downloadFile({ url: '', type: 'pdf' });
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('should handle network errors', async () => {
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+
+      await downloadFile({ url: 'test.com/file', type: 'pdf' });
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Download failed:',
+        expect.any(Error)
+      );
     });
   });
 });
