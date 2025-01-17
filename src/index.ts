@@ -7,6 +7,7 @@ import {
   convertSecondsToTimeUnit,
   fileNameWithEllipsis,
   splitName,
+  downloadFile,
 } from './helpers';
 
 import { parseBoolean } from './string';
@@ -40,4 +41,5 @@ export {
   sortAsc,
   splitName,
   trimContent,
+  downloadFile,
 };
