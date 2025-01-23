@@ -151,6 +151,7 @@ describe('downloadFile', () => {
       remove: jest.fn(),
       href: '',
       download: '',
+      style: '',
     };
     document.createElement = jest.fn().mockReturnValue(mockDOMElement);
     document.body.append = jest.fn();
@@ -159,7 +160,7 @@ describe('downloadFile', () => {
   afterEach(() => jest.clearAllMocks());
 
   describe('successful downloads', () => {
-    it('should download PDF file', async () => {
+    it('should download PDF file with correct fetch options', async () => {
       const blob = new Blob(['test'], { type: 'application/pdf' });
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -173,12 +174,16 @@ describe('downloadFile', () => {
         extension: 'pdf',
       });
 
-      expect(mockFetch).toHaveBeenCalledWith('test.com/doc.pdf');
+      expect(mockFetch).toHaveBeenCalledWith('test.com/doc.pdf', {
+        method: 'GET',
+        credentials: 'omit',
+        mode: 'cors',
+      });
       expect(mockCreateObjectURL).toHaveBeenCalledWith(blob);
       expect(mockDOMElement.click).toHaveBeenCalled();
     });
 
-    it('should download image file with content disposition', async () => {
+    it('should download file with content disposition filename', async () => {
       const blob = new Blob(['test'], { type: 'image/png' });
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -196,24 +201,41 @@ describe('downloadFile', () => {
       });
 
       expect(mockDOMElement.download).toBe('test.png');
+      expect(document.body.append).toHaveBeenCalled();
+      expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock-url');
     });
   });
 
   describe('error handling', () => {
-    it('should skip if url or type missing', async () => {
-      await downloadFile({ url: '', type: 'pdf' });
+    it('should throw error if url or type missing', async () => {
+      await expect(downloadFile({ url: '', type: 'pdf' })).rejects.toThrow(
+        'Invalid download parameters'
+      );
+
+      await expect(downloadFile({ url: 'test.com', type: '' })).rejects.toThrow(
+        'Invalid download parameters'
+      );
+
       expect(mockFetch).not.toHaveBeenCalled();
     });
 
-    it('should handle network errors', async () => {
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    it('should throw error on failed response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+      });
+
+      await expect(
+        downloadFile({ url: 'test.com/file', type: 'pdf' })
+      ).rejects.toThrow('Download failed: 404');
+    });
+
+    it('should throw error on network failure', async () => {
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-      await downloadFile({ url: 'test.com/file', type: 'pdf' });
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Download failed:',
-        expect.any(Error)
-      );
+      await expect(
+        downloadFile({ url: 'test.com/file', type: 'pdf' })
+      ).rejects.toThrow('Network error');
     });
   });
 });
