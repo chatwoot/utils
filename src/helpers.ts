@@ -211,10 +211,21 @@ export const downloadFile = async ({
   type,
   extension = null,
 }: DownloadFileOptions): Promise<void> => {
-  if (!url || !type) return;
+  if (!url || !type) {
+    throw new Error('Invalid download parameters');
+  }
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'omit',
+      mode: 'cors',
+    });
+
+    if (!response.ok) {
+      throw new Error(`Download failed: ${response.status}`);
+    }
+
     const blobData = await response.blob();
 
     const contentType = response.headers.get('content-type');
@@ -240,6 +251,6 @@ export const downloadFile = async ({
     link.remove();
     URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.warn('Download failed:', error);
+    throw error instanceof Error ? error : new Error('Download failed');
   }
 };
