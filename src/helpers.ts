@@ -217,9 +217,7 @@ export const downloadFile = async ({
 
   try {
     const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'omit',
-      mode: 'cors',
+      cache: 'no-store',
     });
 
     if (!response.ok) {
