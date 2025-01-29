@@ -175,9 +175,7 @@ describe('downloadFile', () => {
       });
 
       expect(mockFetch).toHaveBeenCalledWith('test.com/doc.pdf', {
-        method: 'GET',
-        credentials: 'omit',
-        mode: 'cors',
+        cache: 'no-store',
       });
       expect(mockCreateObjectURL).toHaveBeenCalledWith(blob);
       expect(mockDOMElement.click).toHaveBeenCalled();
