@@ -216,11 +216,7 @@ export const downloadFile = async ({
   }
 
   try {
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'omit',
-      mode: 'cors',
-    });
+    const response = await fetch(url, { cache: 'no-store' });
 
     if (!response.ok) {
       throw new Error(`Download failed: ${response.status}`);
