@@ -278,7 +278,6 @@ interface FileInfo {
  * }
  */
 export const getFileInfo = (url: string): FileInfo => {
-  // Default response for error cases
   const defaultInfo: FileInfo = {
     name: 'Unknown File',
     type: '',
@@ -290,33 +289,36 @@ export const getFileInfo = (url: string): FileInfo => {
   }
 
   try {
-    // Remove query parameters if they exist
-    const urlWithoutQuery = url.split('?')[0];
+    // Handle both URL and file path cases
+    const cleanUrl = url
+      .split(/[?#]/)[0] // Remove query params and hash
+      .replace(/\\/g, '/'); // Normalize path separators
 
-    const encodedFilename = urlWithoutQuery.substring(
-      urlWithoutQuery.lastIndexOf('/') + 1
-    );
+    const encodedFilename = cleanUrl.split('/').pop();
+    if (!encodedFilename) {
+      return defaultInfo;
+    }
+
     const fileName = decodeURIComponent(encodedFilename);
-    if (!fileName) return defaultInfo;
 
     // Handle hidden files (starting with dot)
     if (fileName.startsWith('.') && !fileName.includes('.', 1)) {
       return { name: fileName, type: '', base: fileName };
     }
 
-    const parts = fileName.split('.');
-
-    if (parts.length === 1) {
+    // last index is where the file extension starts
+    // This will handle cases where the file name has multiple dots
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex === -1 || lastDotIndex === 0) {
       return { name: fileName, type: '', base: fileName };
     }
 
-    // Extract extension and filename without extension
-    const type = parts.pop()?.toLowerCase() || '';
-    const base = parts.join('.');
-    const name = fileName;
+    const base = fileName.slice(0, lastDotIndex);
+    const type = fileName.slice(lastDotIndex + 1).toLowerCase();
 
-    return { name, type, base };
-  } catch {
+    return { name: fileName, type, base };
+  } catch (error) {
+    console.error('Error processing file info:', error);
     return defaultInfo;
   }
 };

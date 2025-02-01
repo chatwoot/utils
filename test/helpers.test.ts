@@ -321,6 +321,16 @@ describe('getFileInfo', () => {
       });
     });
 
+    it('should handle files with multiple dots', () => {
+      expect(
+        getFileInfo('https://example.com/development.config.yaml')
+      ).toEqual({
+        name: 'development.config.yaml',
+        type: 'yaml',
+        base: 'development.config',
+      });
+    });
+
     it('should handle empty file names', () => {
       expect(getFileInfo('https://example.com/')).toEqual({
         name: 'Unknown File',
