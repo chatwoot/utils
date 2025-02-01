@@ -250,3 +250,73 @@ export const downloadFile = async ({
     throw error instanceof Error ? error : new Error('Download failed');
   }
 };
+
+interface FileInfo {
+  name: string; // Full filename with extension
+  type: string; // File extension only
+  base: string; // Filename without extension
+}
+/**
+ * Extracts file information from a URL or file path.
+ *
+ * @param {string} url - The URL or file path to process
+ * @returns {FileInfo} Object containing file information
+ *
+ * @example
+ * getFileInfo('https://example.com/path/Document%20Name.PDF')
+ * returns {
+ *   name: 'Document Name.PDF',
+ *   type: 'pdf',
+ *   base: 'Document Name'
+ * }
+ *
+ * getFileInfo('invalid/url')
+ * returns {
+ *   name: 'Unknown File',
+ *   type: '',
+ *   base: 'Unknown File'
+ * }
+ */
+export const getFileInfo = (url: string): FileInfo => {
+  // Default response for error cases
+  const defaultInfo: FileInfo = {
+    name: 'Unknown File',
+    type: '',
+    base: 'Unknown File',
+  };
+
+  if (!url || typeof url !== 'string') {
+    return defaultInfo;
+  }
+
+  try {
+    // Remove query parameters if they exist
+    const urlWithoutQuery = url.split('?')[0];
+
+    const encodedFilename = urlWithoutQuery.substring(
+      urlWithoutQuery.lastIndexOf('/') + 1
+    );
+    const fileName = decodeURIComponent(encodedFilename);
+    if (!fileName) return defaultInfo;
+
+    // Handle hidden files (starting with dot)
+    if (fileName.startsWith('.') && !fileName.includes('.', 1)) {
+      return { name: fileName, type: '', base: fileName };
+    }
+
+    const parts = fileName.split('.');
+
+    if (parts.length === 1) {
+      return { name: fileName, type: '', base: fileName };
+    }
+
+    // Extract extension and filename without extension
+    const type = parts.pop()?.toLowerCase() || '';
+    const base = parts.join('.');
+    const name = fileName;
+
+    return { name, type, base };
+  } catch {
+    return defaultInfo;
+  }
+};
