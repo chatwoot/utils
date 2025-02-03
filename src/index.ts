@@ -8,6 +8,7 @@ import {
   fileNameWithEllipsis,
   splitName,
   downloadFile,
+  getFileInfo,
 } from './helpers';
 
 import { parseBoolean } from './string';
@@ -42,4 +43,5 @@ export {
   splitName,
   trimContent,
   downloadFile,
+  getFileInfo,
 };

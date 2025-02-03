@@ -250,3 +250,75 @@ export const downloadFile = async ({
     throw error instanceof Error ? error : new Error('Download failed');
   }
 };
+
+interface FileInfo {
+  name: string; // Full filename with extension
+  type: string; // File extension only
+  base: string; // Filename without extension
+}
+/**
+ * Extracts file information from a URL or file path.
+ *
+ * @param {string} url - The URL or file path to process
+ * @returns {FileInfo} Object containing file information
+ *
+ * @example
+ * getFileInfo('https://example.com/path/Document%20Name.PDF')
+ * returns {
+ *   name: 'Document Name.PDF',
+ *   type: 'pdf',
+ *   base: 'Document Name'
+ * }
+ *
+ * getFileInfo('invalid/url')
+ * returns {
+ *   name: 'Unknown File',
+ *   type: '',
+ *   base: 'Unknown File'
+ * }
+ */
+export const getFileInfo = (url: string): FileInfo => {
+  const defaultInfo: FileInfo = {
+    name: 'Unknown File',
+    type: '',
+    base: 'Unknown File',
+  };
+
+  if (!url || typeof url !== 'string') {
+    return defaultInfo;
+  }
+
+  try {
+    // Handle both URL and file path cases
+    const cleanUrl = url
+      .split(/[?#]/)[0] // Remove query params and hash
+      .replace(/\\/g, '/'); // Normalize path separators
+
+    const encodedFilename = cleanUrl.split('/').pop();
+    if (!encodedFilename) {
+      return defaultInfo;
+    }
+
+    const fileName = decodeURIComponent(encodedFilename);
+
+    // Handle hidden files (starting with dot)
+    if (fileName.startsWith('.') && !fileName.includes('.', 1)) {
+      return { name: fileName, type: '', base: fileName };
+    }
+
+    // last index is where the file extension starts
+    // This will handle cases where the file name has multiple dots
+    const lastDotIndex = fileName.lastIndexOf('.');
+    if (lastDotIndex === -1 || lastDotIndex === 0) {
+      return { name: fileName, type: '', base: fileName };
+    }
+
+    const base = fileName.slice(0, lastDotIndex);
+    const type = fileName.slice(lastDotIndex + 1).toLowerCase();
+
+    return { name: fileName, type, base };
+  } catch (error) {
+    console.error('Error processing file info:', error);
+    return defaultInfo;
+  }
+};

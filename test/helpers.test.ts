@@ -3,6 +3,7 @@ import {
   fileNameWithEllipsis,
   splitName,
   downloadFile,
+  getFileInfo,
 } from '../src/helpers';
 
 describe('#convertSecondsToTimeUnit', () => {
@@ -234,6 +235,142 @@ describe('downloadFile', () => {
       await expect(
         downloadFile({ url: 'test.com/file', type: 'pdf' })
       ).rejects.toThrow('Network error');
+    });
+  });
+});
+
+describe('getFileInfo', () => {
+  describe('normal cases', () => {
+    it('should extract info from a basic filename', () => {
+      expect(getFileInfo('https://example.com/document.pdf')).toEqual({
+        name: 'document.pdf',
+        type: 'pdf',
+        base: 'document',
+      });
+    });
+
+    it('should handle filenames with spaces', () => {
+      expect(getFileInfo('https://example.com/My Document.pdf')).toEqual({
+        name: 'My Document.pdf',
+        type: 'pdf',
+        base: 'My Document',
+      });
+    });
+
+    it('should convert file type to lowercase', () => {
+      expect(getFileInfo('https://example.com/image.PNG')).toEqual({
+        name: 'image.PNG',
+        type: 'png',
+        base: 'image',
+      });
+    });
+
+    it('should handle multiple dots in filename', () => {
+      expect(getFileInfo('https://example.com/archive.tar.gz')).toEqual({
+        name: 'archive.tar.gz',
+        type: 'gz',
+        base: 'archive.tar',
+      });
+    });
+  });
+
+  describe('URL handling', () => {
+    it('should handle URL encoded characters', () => {
+      expect(
+        getFileInfo('https://example.com/My%20Document%20Name.pdf')
+      ).toEqual({
+        name: 'My Document Name.pdf',
+        type: 'pdf',
+        base: 'My Document Name',
+      });
+    });
+
+    it('should handle full URLs with query parameters', () => {
+      expect(
+        getFileInfo('https://example.com/doc.pdf?version=1&type=latest')
+      ).toEqual({
+        name: 'doc.pdf',
+        type: 'pdf',
+        base: 'doc',
+      });
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should handle files without extension', () => {
+      expect(getFileInfo('https://example.com/README')).toEqual({
+        name: 'README',
+        type: '',
+        base: 'README',
+      });
+    });
+
+    it('should handle hidden files', () => {
+      expect(getFileInfo('https://example.com/.gitignore')).toEqual({
+        name: '.gitignore',
+        type: '',
+        base: '.gitignore',
+      });
+    });
+
+    it('should handle files starting with a dot', () => {
+      expect(getFileInfo('https://example.com/.env.local')).toEqual({
+        name: '.env.local',
+        type: 'local',
+        base: '.env',
+      });
+    });
+
+    it('should handle files with multiple dots', () => {
+      expect(
+        getFileInfo('https://example.com/development.config.yaml')
+      ).toEqual({
+        name: 'development.config.yaml',
+        type: 'yaml',
+        base: 'development.config',
+      });
+    });
+
+    it('should handle empty file names', () => {
+      expect(getFileInfo('https://example.com/')).toEqual({
+        name: 'Unknown File',
+        type: '',
+        base: 'Unknown File',
+      });
+    });
+
+    it('should handle whitespace in filenames', () => {
+      expect(getFileInfo('https://example.com/  spaced  .pdf')).toEqual({
+        name: '  spaced  .pdf',
+        type: 'pdf',
+        base: '  spaced  ',
+      });
+    });
+
+    it('should handle null input', () => {
+      // @ts-ignore: testing null input
+      expect(getFileInfo(null)).toEqual({
+        name: 'Unknown File',
+        type: '',
+        base: 'Unknown File',
+      });
+    });
+
+    it('should handle undefined input', () => {
+      // @ts-ignore: testing undefined input
+      expect(getFileInfo(undefined)).toEqual({
+        name: 'Unknown File',
+        type: '',
+        base: 'Unknown File',
+      });
+    });
+
+    it('should handle empty string input', () => {
+      expect(getFileInfo('')).toEqual({
+        name: 'Unknown File',
+        type: '',
+        base: 'Unknown File',
+      });
     });
   });
 });
