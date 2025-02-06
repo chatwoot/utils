@@ -22,13 +22,20 @@ export type EmailAttributes = {
   to: string[] | null;
 };
 
-export type MessageContentAttribute = {
+export type IncomingContentAttribute = {
+  email: EmailAttributes | null;
+};
+
+export type OutgoingContentAttribute = {
   cc_emails: string[] | null;
   bcc_emails: string[] | null;
   to_emails: string[] | null;
-  email: EmailAttributes | null;
   external_error: string;
 };
+
+export type MessageContentAttributes =
+  | IncomingContentAttribute
+  | OutgoingContentAttribute;
 
 export type MessageConversation = {
   id: number;
@@ -73,7 +80,7 @@ export enum MessageType {
   TEMPLATE = 3,
 }
 
-export type EmailMessage = {
+export type BaseEmailMessage = {
   id: number;
   content: null;
   account_id: number;
@@ -86,7 +93,7 @@ export type EmailMessage = {
   status: string;
   source_id: null;
   content_type: string;
-  content_attributes: MessageContentAttribute;
+  content_attributes: MessageContentAttributes;
   sender_type: string;
   sender_id: number;
   external_source_ids: {};
@@ -97,3 +104,15 @@ export type EmailMessage = {
   attachments: MessageAttachment[];
   sender: MessageSender;
 };
+
+export type IncomingEmailMessage = BaseEmailMessage & {
+  message_type: MessageType.INCOMING;
+  content_attributes: IncomingContentAttribute;
+};
+
+export type OutgoingEmailMessage = BaseEmailMessage & {
+  message_type: MessageType.OUTGOING;
+  content_attributes: OutgoingContentAttribute;
+};
+
+export type EmailMessage = IncomingEmailMessage | OutgoingEmailMessage;
