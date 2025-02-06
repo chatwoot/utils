@@ -1,6 +1,10 @@
 import type { EmailMessage } from './types/message';
 import {MessageType} from './types/message'
 
+/**
+ * Determines the recipients for an email reply based on the last email message's details,
+ * the conversation contact, and system-specific email addresses.
+ */
 export function getRecipients(lastEmail: EmailMessage, conversationContact: string, inboxEmail: string, forwardToEmail: string) {
   let to = [] as string[];
   let cc = [] as string[];
