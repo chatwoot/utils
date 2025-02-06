@@ -8,6 +8,7 @@ jobs:
     strategy:
       matrix:
         node: ['16.x', '20.x', '23.x']
+        os: ['ubuntu-latest']
 
     steps:
       - name: Checkout repo
