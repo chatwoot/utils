@@ -1,11 +1,15 @@
-import type { EmailMessage } from './types/message';
-import {MessageType} from './types/message'
+import { EmailMessage, MessageType } from './types/message';
 
 /**
  * Determines the recipients for an email reply based on the last email message's details,
  * the conversation contact, and system-specific email addresses.
  */
-export function getRecipients(lastEmail: EmailMessage, conversationContact: string, inboxEmail: string, forwardToEmail: string) {
+export function getRecipients(
+  lastEmail: EmailMessage,
+  conversationContact: string,
+  inboxEmail: string,
+  forwardToEmail: string
+) {
   let to = [] as string[];
   let cc = [] as string[];
   let bcc = [] as string[];
@@ -21,7 +25,6 @@ export function getRecipients(lastEmail: EmailMessage, conversationContact: stri
     message_type: messageType,
   } = lastEmail;
 
-
   let isLastEmailFromContact = false;
   if (emailAttributes) {
     // this will be false anyway if the last email was outgoing
@@ -29,12 +32,12 @@ export function getRecipients(lastEmail: EmailMessage, conversationContact: stri
       conversationContact
     );
 
-    if  (messageType === MessageType.INCOMING) {
+    if (messageType === MessageType.INCOMING) {
       // Reply to sender if incoming
-      to.push(...emailAttributes.from ?? []);
+      to.push(...(emailAttributes.from ?? []));
     } else {
       // Otherwise, reply to the last recipient (for outgoing message)
-      to.push(...emailAttributes.to ?? []);
+      to.push(...(emailAttributes.to ?? []));
     }
 
     // Start building the cc list, including additional recipients
