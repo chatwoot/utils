@@ -11,6 +11,8 @@ import {
   getFileInfo,
 } from './helpers';
 
+import { getRecipients } from './email';
+
 import { parseBoolean } from './string';
 import { sortAsc, quantile, clamp, getQuantileIntervals } from './math';
 import {
@@ -44,4 +46,5 @@ export {
   trimContent,
   downloadFile,
   getFileInfo,
+  getRecipients,
 };
