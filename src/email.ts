@@ -1,15 +1,7 @@
-import { EmailMessage, MessageType } from './types/message';
+import type { EmailMessage, IncomingEmailMessage, OutgoingEmailMessage } from './types/message';
+import {MessageType} from './types/message'
 
-/**
- * Determines the recipients for an email reply based on the last email message's details,
- * the conversation contact, and system-specific email addresses.
- */
-export function getRecipients(
-  lastEmail: EmailMessage,
-  conversationContact: string,
-  inboxEmail: string,
-  forwardToEmail: string
-) {
+export function getRecipients(lastEmail: EmailMessage, conversationContact: string, inboxEmail: string, forwardToEmail: string) {
   let to = [] as string[];
   let cc = [] as string[];
   let bcc = [] as string[];
@@ -20,43 +12,69 @@ export function getRecipients(
   }
 
   // Extract values from lastEmail and current conversation context
-  const {
-    content_attributes: { email: emailAttributes },
-    message_type: messageType,
-  } = lastEmail;
+  const { message_type: messageType } = lastEmail;
+
+  const isIncoming = messageType === MessageType.INCOMING
+
+  let emailAttributes = {} as {
+    cc: string[] | null;
+    bcc: string[] | null;
+    from: string[] | null;
+    to: string[] | null;
+  }
+
+  if (isIncoming) {
+    const {content_attributes: contentAttributes } = lastEmail as IncomingEmailMessage
+    const email = contentAttributes.email
+    emailAttributes = {
+      cc: email?.cc || [],
+      bcc: email?.bcc || [],
+      from: email?.from || [],
+      to: []
+    }
+  } else {
+    const { content_attributes: contentAttributes } = lastEmail as OutgoingEmailMessage
+    const {cc_emails: ccEmails, bcc_emails: bccEmails, to_emails: toEmails} = contentAttributes
+
+    emailAttributes = {
+      cc: ccEmails,
+      bcc: bccEmails,
+      to: toEmails,
+      from: []
+    }
+  }
+
 
   let isLastEmailFromContact = false;
-  if (emailAttributes) {
-    // this will be false anyway if the last email was outgoing
-    isLastEmailFromContact = (emailAttributes.from ?? []).includes(
-      conversationContact
-    );
+  // this will be false anyway if the last email was outgoing
+  isLastEmailFromContact = isIncoming && (emailAttributes.from ?? []).includes(
+    conversationContact
+  );
 
-    if (messageType === MessageType.INCOMING) {
-      // Reply to sender if incoming
-      to.push(...(emailAttributes.from ?? []));
-    } else {
-      // Otherwise, reply to the last recipient (for outgoing message)
-      to.push(...(emailAttributes.to ?? []));
-    }
-
-    // Start building the cc list, including additional recipients
-    // If the email had multiple recipients, include them in the cc list
-    cc = emailAttributes.cc ? [...emailAttributes.cc] : [];
-    if (Array.isArray(emailAttributes.to)) {
-      cc.push(...emailAttributes.to);
-    }
-
-    // Add the conversation contact to cc if the last email wasn't sent by them
-    if (!isLastEmailFromContact) {
-      cc.push(conversationContact);
-    }
-
-    // Process BCC: Remove conversation contact from bcc as it is already in cc
-    bcc = (emailAttributes.bcc || []).filter(
-      emailAddress => emailAddress !== conversationContact
-    );
+  if  (isIncoming) {
+    // Reply to sender if incoming
+    to.push(...emailAttributes.from ?? []);
+  } else {
+    // Otherwise, reply to the last recipient (for outgoing message)
+    to.push(...emailAttributes.to ?? []);
   }
+
+  // Start building the cc list, including additional recipients
+  // If the email had multiple recipients, include them in the cc list
+  cc = emailAttributes.cc ? [...emailAttributes.cc] : [];
+  if (Array.isArray(emailAttributes.to)) {
+    cc.push(...emailAttributes.to);
+  }
+
+  // Add the conversation contact to cc if the last email wasn't sent by them
+  if (!isLastEmailFromContact) {
+    cc.push(conversationContact);
+  }
+
+  // Process BCC: Remove conversation contact from bcc as it is already in cc
+  bcc = (emailAttributes.bcc || []).filter(
+    emailAddress => emailAddress !== conversationContact
+  );
 
   // Filter out undesired emails from cc:
   // - Remove conversation contact from cc if they sent the last email
