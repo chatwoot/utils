@@ -1,7 +1,16 @@
-import type { EmailMessage, IncomingEmailMessage, OutgoingEmailMessage } from './types/message';
-import {MessageType} from './types/message'
+import {
+  EmailMessage,
+  MessageType,
+  IncomingEmailMessage,
+  OutgoingEmailMessage,
+} from './types/message';
 
-export function getRecipients(lastEmail: EmailMessage, conversationContact: string, inboxEmail: string, forwardToEmail: string) {
+export function getRecipients(
+  lastEmail: EmailMessage,
+  conversationContact: string,
+  inboxEmail: string,
+  forwardToEmail: string
+) {
   let to = [] as string[];
   let cc = [] as string[];
   let bcc = [] as string[];
@@ -14,49 +23,55 @@ export function getRecipients(lastEmail: EmailMessage, conversationContact: stri
   // Extract values from lastEmail and current conversation context
   const { message_type: messageType } = lastEmail;
 
-  const isIncoming = messageType === MessageType.INCOMING
+  const isIncoming = messageType === MessageType.INCOMING;
 
   let emailAttributes = {} as {
     cc: string[] | null;
     bcc: string[] | null;
     from: string[] | null;
     to: string[] | null;
-  }
+  };
 
   if (isIncoming) {
-    const {content_attributes: contentAttributes } = lastEmail as IncomingEmailMessage
-    const email = contentAttributes.email
+    const {
+      content_attributes: contentAttributes,
+    } = lastEmail as IncomingEmailMessage;
+    const email = contentAttributes.email;
     emailAttributes = {
       cc: email?.cc || [],
       bcc: email?.bcc || [],
       from: email?.from || [],
-      to: []
-    }
+      to: [],
+    };
   } else {
-    const { content_attributes: contentAttributes } = lastEmail as OutgoingEmailMessage
-    const {cc_emails: ccEmails, bcc_emails: bccEmails, to_emails: toEmails} = contentAttributes
+    const {
+      content_attributes: contentAttributes,
+    } = lastEmail as OutgoingEmailMessage;
+    const {
+      cc_emails: ccEmails,
+      bcc_emails: bccEmails,
+      to_emails: toEmails,
+    } = contentAttributes;
 
     emailAttributes = {
       cc: ccEmails,
       bcc: bccEmails,
       to: toEmails,
-      from: []
-    }
+      from: [],
+    };
   }
-
 
   let isLastEmailFromContact = false;
   // this will be false anyway if the last email was outgoing
-  isLastEmailFromContact = isIncoming && (emailAttributes.from ?? []).includes(
-    conversationContact
-  );
+  isLastEmailFromContact =
+    isIncoming && (emailAttributes.from ?? []).includes(conversationContact);
 
-  if  (isIncoming) {
+  if (isIncoming) {
     // Reply to sender if incoming
-    to.push(...emailAttributes.from ?? []);
+    to.push(...(emailAttributes.from ?? []));
   } else {
     // Otherwise, reply to the last recipient (for outgoing message)
-    to.push(...emailAttributes.to ?? []);
+    to.push(...(emailAttributes.to ?? []));
   }
 
   // Start building the cc list, including additional recipients

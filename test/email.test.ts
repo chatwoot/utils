@@ -79,10 +79,7 @@ describe('getRecipients', () => {
       expect(result.to).toEqual(['sender@example.com']);
       // "cc" list: original cc plus conversationContact (since not sender)
       expect(new Set(result.cc)).toEqual(
-        new Set([
-          'cc1@example.com',
-          conversationContact,
-        ])
+        new Set(['cc1@example.com', conversationContact])
       );
       // "bcc" list: conversationContact filtered out plus any other
       expect(result.bcc).toEqual(['bcc1@example.com']);
@@ -164,10 +161,7 @@ describe('getRecipients', () => {
       );
       // cc should filter out inboxEmail and forwardToEmail, but includes conversation contact.
       expect(new Set(result.cc)).toEqual(
-        new Set([
-          'keep@example.com',
-          conversationContact,
-        ])
+        new Set(['keep@example.com', conversationContact])
       );
     });
 
@@ -190,10 +184,7 @@ describe('getRecipients', () => {
       );
       // replyUUIDEmail should be removed from cc.
       expect(result.cc).toEqual(
-        expect.arrayContaining([
-          'valid@example.com',
-          conversationContact,
-        ])
+        expect.arrayContaining(['valid@example.com', conversationContact])
       );
       expect(result.cc).not.toContain(replyUUIDEmail);
     });
