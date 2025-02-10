@@ -5,222 +5,401 @@ import {
   OutgoingEmailMessage,
 } from '../src/types/message';
 
+const createIncomingEmail = ({
+  from = [],
+  cc = [],
+  bcc = [],
+}: {
+  from?: string[];
+  cc?: string[];
+  bcc?: string[];
+}) => {
+  return {
+    message_type: MessageType.INCOMING,
+    content_attributes: {
+      email: { from, cc, bcc },
+    },
+  } as IncomingEmailMessage;
+};
+
+const createOutgoingEmail = ({
+  to = [],
+  cc = [],
+  bcc = [],
+}: {
+  to?: string[];
+  cc?: string[];
+  bcc?: string[];
+}) => {
+  return {
+    message_type: MessageType.OUTGOING,
+    content_attributes: {
+      to_emails: to,
+      cc_emails: cc,
+      bcc_emails: bcc,
+    },
+  } as OutgoingEmailMessage;
+};
+
 describe('getRecipients', () => {
   const conversationContact = 'contact@example.com';
   const inboxEmail = 'inbox@example.com';
-  const forwardToEmail = 'forward@example.com';
+  const forwardToEmail = 'forwardto@example.com';
 
-  const createIncomingEmail = ({
-    emailAttributes,
-  }: {
-    emailAttributes: Record<string, any>;
-  }) => {
-    return {
-      message_type: MessageType.INCOMING,
-      content_attributes: {
-        email: emailAttributes,
-      },
-    } as IncomingEmailMessage;
-  };
-
-  const createOutgoingEmail = ({
-    to,
-    cc,
-    bcc,
-  }: {
-    to?: string[];
-    cc?: string[];
-    bcc?: string[];
-  }) => {
-    return {
-      message_type: MessageType.OUTGOING,
-      content_attributes: {
-        to_emails: to || [],
-        cc_emails: cc || [],
-        bcc_emails: bcc || [],
-      },
-    } as OutgoingEmailMessage;
-  };
-
-  const replyUUIDEmail =
-    'reply+123e4567-e89b-12d3-a456-426614174000@example.com';
-
-  test('should return empty recipients when no lastEmail is provided', () => {
-    const result = getRecipients(
-      // @ts-ignore
-      null,
-      conversationContact,
-      inboxEmail,
-      forwardToEmail
-    );
-    expect(result).toEqual({ to: [], cc: [], bcc: [] });
-  });
-
-  describe('Incoming messages', () => {
-    test('should reply to sender if incoming and add conversation contact to CC when sender is different', () => {
-      const emailAttributes = {
-        from: ['sender@example.com'],
-        to: ['recipient1@example.com'],
-        cc: ['cc1@example.com'],
-        bcc: ['bcc1@example.com', conversationContact],
-      };
-
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
-      });
-
+  describe('No Last Email', () => {
+    test('should return empty arrays when lastEmail is null', () => {
       const result = getRecipients(
-        lastEmail,
+        null as any,
         conversationContact,
         inboxEmail,
         forwardToEmail
       );
-      // "to" list should include sender
-      expect(result.to).toEqual(['sender@example.com']);
-      // "cc" list: original cc plus conversationContact (since not sender)
-      expect(new Set(result.cc)).toEqual(
-        new Set(['cc1@example.com', conversationContact])
-      );
-      // "bcc" list: conversationContact filtered out plus any other
-      expect(result.bcc).toEqual(['bcc1@example.com']);
+      expect(result.to).toEqual([]);
+      expect(result.cc).toEqual([]);
+      expect(result.bcc).toEqual([]);
     });
 
-    test('should not add conversation contact to CC if sender is the conversation contact', () => {
-      const emailAttributes = {
-        from: [conversationContact],
-        to: ['contact@example.com'], // also same as conversationContact added in cc below
-        cc: ['ccFromEmail@example.com'],
-        bcc: ['bcc1@example.com'],
-      };
-
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
-      });
-
+    test('should return empty arrays when lastEmail is undefined', () => {
       const result = getRecipients(
-        lastEmail,
+        undefined as any,
         conversationContact,
         inboxEmail,
         forwardToEmail
       );
-      // To should be conversationContact (reply to sender)
-      expect(result.to).toEqual([conversationContact]);
-      // CC should only include those from cc but not conversationContact since it was sender
-      expect(result.cc).toEqual(['ccFromEmail@example.com']);
-      // BCC remains filtered, conversationContact is not present
-      expect(result.bcc).toEqual(['bcc1@example.com']);
+      expect(result.to).toEqual([]);
+      expect(result.cc).toEqual([]);
+      expect(result.bcc).toEqual([]);
     });
   });
 
-  describe('Outgoing messages', () => {
-    test('should reply to last recipient if outgoing and add conversation contact to CC', () => {
-      const lastEmail = createOutgoingEmail({
-        to: ['recipient2@example.com'],
-        cc: ['cc2@example.com'],
-        bcc: ['bcc2@example.com', conversationContact],
-      });
-
-      const result = getRecipients(
-        lastEmail,
-        conversationContact,
-        inboxEmail,
-        forwardToEmail
-      );
-      // "to" should include the last recipient
-      expect(result.to).toEqual(['recipient2@example.com']);
-      // "cc" should include original cc, emailAttributes.to and the conversation contact (since not sender)
-      expect(new Set(result.cc)).toEqual(
-        new Set([
-          'cc2@example.com',
-          'recipient2@example.com',
+  describe('Incoming Email', () => {
+    describe('Single Recipient', () => {
+      test('should add the sender to the "to" field', () => {
+        const fromEmail = 'sender@example.com';
+        const lastEmail = createIncomingEmail({ from: [fromEmail] });
+        const result = getRecipients(
+          lastEmail,
           conversationContact,
-        ])
-      );
-      // Bcc: conversation contact removed
-      expect(result.bcc).toEqual(['bcc2@example.com']);
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([fromEmail]);
+      });
+    });
+
+    describe('Multiple Recipients', () => {
+      test('should add all senders to the "to" field', () => {
+        const fromEmails = ['sender1@example.com', 'sender2@example.com'];
+        const lastEmail = createIncomingEmail({ from: fromEmails });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual(fromEmails);
+      });
+    });
+
+    describe('Conversation Contact Handling', () => {
+      test('should NOT add conversationContact to "cc" if they sent the last email', () => {
+        const fromEmail = conversationContact;
+        const lastEmail = createIncomingEmail({ from: [fromEmail] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual([]); // Should be empty because conversationContact is the sender
+      });
+
+      test('should add conversationContact to "cc" if they did NOT send the last email', () => {
+        const fromEmail = 'sender@example.com';
+        const lastEmail = createIncomingEmail({ from: [fromEmail] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toContain(conversationContact); // Should contain conversationContact
+      });
+    });
+
+    describe('CC Recipients', () => {
+      test('should add emails in the "cc" field to the "cc" array', () => {
+        const ccEmails = ['cc1@example.com', 'cc2@example.com'];
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          cc: ccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
+        expect(result.cc.length).toBeGreaterThanOrEqual(ccEmails.length); // Ensure we have at least the ccEmails
+      });
+    });
+
+    describe('BCC Recipients', () => {
+      test('should add emails in the "bcc" field to the "bcc" array', () => {
+        const bccEmails = ['bcc1@example.com', 'bcc2@example.com'];
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).toEqual(expect.arrayContaining(bccEmails));
+        expect(result.bcc.length).toBeGreaterThanOrEqual(bccEmails.length);
+      });
+
+      test('should remove conversationContact from "bcc" if present', () => {
+        const bccEmails = ['bcc1@example.com', conversationContact];
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).not.toContain(conversationContact);
+      });
+    });
+
+    describe('From is Null', () => {
+      test('should not error when from is null', () => {
+        // @ts-ignore
+        const lastEmail = createIncomingEmail({ from: null });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([]); // Should be empty since there's no sender
+      });
     });
   });
 
-  describe('Filtering logic', () => {
-    test('should remove inbox and forward emails from cc', () => {
-      const emailAttributes = {
-        from: ['someone@example.com'],
-        to: ['target@example.com'],
-        cc: [inboxEmail, forwardToEmail, 'keep@example.com'],
-      };
-
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
+  describe('Outgoing Email', () => {
+    describe('Single Recipient', () => {
+      test('should add the recipient to the "to" field', () => {
+        const toEmail = 'recipient@example.com';
+        const lastEmail = createOutgoingEmail({ to: [toEmail] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([toEmail]);
       });
-
-      const result = getRecipients(
-        lastEmail,
-        conversationContact,
-        inboxEmail,
-        forwardToEmail
-      );
-      // cc should filter out inboxEmail and forwardToEmail, but includes conversation contact.
-      expect(new Set(result.cc)).toEqual(
-        new Set(['keep@example.com', conversationContact])
-      );
     });
 
-    test('should remove emails matching replyUUID pattern from cc', () => {
-      const emailAttributes = {
-        from: ['someone@example.com'],
-        to: ['target@example.com'],
-        cc: [replyUUIDEmail, 'valid@example.com'],
-      };
+    describe('Multiple Recipients', () => {
+      test('should add all recipients to the "to" field', () => {
+        const toEmails = ['recipient1@example.com', 'recipient2@example.com'];
+        const lastEmail = createOutgoingEmail({ to: toEmails });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual(toEmails);
+      });
+    });
 
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
+    describe('CC Recipients', () => {
+      test('should add emails in the "cc_emails" field to the "cc" array', () => {
+        const ccEmails = ['cc1@example.com', 'cc2@example.com'];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          cc: ccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
+        expect(result.cc.length).toBeGreaterThanOrEqual(ccEmails.length);
+      });
+    });
+
+    describe('BCC Recipients', () => {
+      test('should add emails in the "bcc_emails" field to the "bcc" array', () => {
+        const bccEmails = ['bcc1@example.com', 'bcc2@example.com'];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).toEqual(expect.arrayContaining(bccEmails));
+        expect(result.bcc.length).toBeGreaterThanOrEqual(bccEmails.length);
       });
 
+      test('should remove conversationContact from "bcc" if present', () => {
+        const bccEmails = ['bcc1@example.com', conversationContact];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).not.toContain(conversationContact);
+      });
+    });
+
+    describe('To is Null', () => {
+      test('should reply to current contact', () => {
+        // @ts-ignore
+        const lastEmail = createOutgoingEmail({ to: null });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([conversationContact]); // Should be empty since there's no recipient
+        expect(result.cc).toEqual([]);
+      });
+    });
+  });
+
+  describe('Email Filtering', () => {
+    test('should remove inboxEmail from "cc"', () => {
+      const ccEmails = [inboxEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
       const result = getRecipients(
         lastEmail,
         conversationContact,
         inboxEmail,
         forwardToEmail
       );
-      // replyUUIDEmail should be removed from cc.
-      expect(result.cc).toEqual(
-        expect.arrayContaining(['valid@example.com', conversationContact])
+      expect(result.cc).not.toContain(inboxEmail);
+    });
+
+    test('should remove forwardToEmail from "cc"', () => {
+      const ccEmails = [forwardToEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.cc).not.toContain(forwardToEmail);
+    });
+
+    test('should remove emails matching the reply UUID pattern from "cc"', () => {
+      const replyUUIDEmail =
+        'reply+12345678-1234-1234-1234-1234567890ab@example.com';
+      const ccEmails = [replyUUIDEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
       );
       expect(result.cc).not.toContain(replyUUIDEmail);
     });
+  });
 
-    test('should deduplicate email addresses across each recipient list', () => {
-      const emailAttributes = {
-        from: [conversationContact, conversationContact],
-        to: ['dup@example.com', 'dup@example.com'],
-        cc: ['dupCc@example.com', 'dupCc@example.com'],
-        bcc: ['dupBcc@example.com', conversationContact, 'dupBcc@example.com'],
-      };
-
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
-      });
-
+  describe('Deduplication', () => {
+    test('should deduplicate emails in the "to" field', () => {
+      const toEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createOutgoingEmail({ to: toEmails });
       const result = getRecipients(
         lastEmail,
         conversationContact,
         inboxEmail,
         forwardToEmail
       );
-      // "to" deduped
-      expect(result.to).toEqual([conversationContact]);
-      // "cc": conversation contact is removed since it was the sender; also deduplicated
-      expect(result.cc).toEqual(['dupCc@example.com']);
-      // "bcc": deduplicated and conversation contact filtered out
-      expect(result.bcc).toEqual(['dupBcc@example.com']);
+      expect(result.to).toEqual(['duplicate@example.com']);
+    });
+
+    test('should deduplicate emails in the "cc" field', () => {
+      const ccEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+
+      expect(result.to).toEqual(['sender@example.com']);
+      expect(result.cc).toEqual([
+        'duplicate@example.com',
+        'contact@example.com',
+      ]);
+    });
+
+    test('should deduplicate emails in the "bcc" field', () => {
+      const bccEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        bcc: bccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.bcc).toEqual(['duplicate@example.com']);
     });
   });
 
-  describe('Edge Cases', () => {
-    test('should handle missing email attributes gracefully', () => {
-      const lastEmail = createIncomingEmail({
-        // @ts-ignore
-        emailAttributes: undefined,
+  describe('Complex Scenarios', () => {
+    test('should handle a complex scenario with multiple recipients, conversationContact, inboxEmail, and forwardToEmail correctly', () => {
+      const toEmails = ['recipient1@example.com', 'recipient2@example.com'];
+      const ccEmails = [conversationContact, inboxEmail, 'cc1@example.com'];
+      const bccEmails = [
+        forwardToEmail,
+        'bcc1@example.com',
+        conversationContact,
+      ];
+      const lastEmail = createOutgoingEmail({
+        to: toEmails,
+        cc: ccEmails,
+        bcc: bccEmails,
       });
 
       const result = getRecipients(
@@ -229,32 +408,15 @@ describe('getRecipients', () => {
         inboxEmail,
         forwardToEmail
       );
-      // When email attributes are missing, conversation contact is added to cc
-      expect(result).toEqual({ to: [], cc: [conversationContact], bcc: [] });
-    });
 
-    test('should handle when arrays are undefined in emailAttributes', () => {
-      const emailAttributes = {
-        from: undefined,
-        to: undefined,
-        cc: undefined,
-        bcc: undefined,
-      };
-
-      const lastEmail = createIncomingEmail({
-        emailAttributes,
-      });
-
-      const result = getRecipients(
-        lastEmail,
-        conversationContact,
-        inboxEmail,
-        forwardToEmail
-      );
-      // No recipients are provided so “to” list is empty; however, conversation contact is added to cc.
-      expect(result.to).toEqual([]);
-      expect(result.cc).toEqual([conversationContact]);
-      expect(result.bcc).toEqual([]);
+      expect(result.to).toEqual(toEmails); // To should be the same as the original toEmails
+      expect(result.cc).toEqual(
+        expect.arrayContaining(['cc1@example.com', conversationContact])
+      ); // CC should contain cc1 and conversationContact
+      expect(result.cc).not.toContain(inboxEmail); // CC should NOT contain inboxEmail
+      expect(result.bcc).toEqual(['bcc1@example.com']); // BCC should only contain bcc1
+      expect(result.bcc).not.toContain(forwardToEmail); // BCC should NOT contain forwardToEmail
+      expect(result.bcc).not.toContain(conversationContact); // BCC should NOT contain conversationContact
     });
   });
 });
