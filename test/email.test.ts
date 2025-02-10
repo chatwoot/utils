@@ -289,18 +289,128 @@ describe('getRecipients', () => {
   });
 
   describe('Email Filtering', () => {
-    test('should remove inboxEmail from "cc"', () => {});
-    test('should remove forwardToEmail from "cc"', () => {});
-    test('should remove emails matching the reply UUID pattern from "cc"', () => {});
+    test('should remove inboxEmail from "cc"', () => {
+      const ccEmails = [inboxEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.cc).not.toContain(inboxEmail);
+    });
+
+    test('should remove forwardToEmail from "cc"', () => {
+      const ccEmails = [forwardToEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.cc).not.toContain(forwardToEmail);
+    });
+
+    test('should remove emails matching the reply UUID pattern from "cc"', () => {
+      const replyUUIDEmail =
+        'reply+12345678-1234-1234-1234-1234567890ab@example.com';
+      const ccEmails = [replyUUIDEmail, 'other@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.cc).not.toContain(replyUUIDEmail);
+    });
   });
 
   describe('Deduplication', () => {
-    test('should deduplicate emails in the "to" field', () => {});
-    test('should deduplicate emails in the "cc" field', () => {});
-    test('should deduplicate emails in the "bcc" field', () => {});
+    test('should deduplicate emails in the "to" field', () => {
+      const toEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createOutgoingEmail({ to: toEmails });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.to).toEqual(['duplicate@example.com']);
+    });
+
+    test('should deduplicate emails in the "cc" field', () => {
+      const ccEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        cc: ccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.cc).toEqual(['duplicate@example.com']);
+    });
+
+    test('should deduplicate emails in the "bcc" field', () => {
+      const bccEmails = ['duplicate@example.com', 'duplicate@example.com'];
+      const lastEmail = createIncomingEmail({
+        from: ['sender@example.com'],
+        bcc: bccEmails,
+      });
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.bcc).toEqual(['duplicate@example.com']);
+    });
   });
 
   describe('Complex Scenarios', () => {
-    test('should handle a complex scenario with multiple recipients, conversationContact, inboxEmail, and forwardToEmail correctly', () => {});
+    test('should handle a complex scenario with multiple recipients, conversationContact, inboxEmail, and forwardToEmail correctly', () => {
+      const toEmails = ['recipient1@example.com', 'recipient2@example.com'];
+      const ccEmails = [conversationContact, inboxEmail, 'cc1@example.com'];
+      const bccEmails = [
+        forwardToEmail,
+        'bcc1@example.com',
+        conversationContact,
+      ];
+      const lastEmail = createOutgoingEmail({
+        to: toEmails,
+        cc: ccEmails,
+        bcc: bccEmails,
+      });
+
+      const result = getRecipients(
+        lastEmail,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+
+      expect(result.to).toEqual(toEmails); // To should be the same as the original toEmails
+      expect(result.cc).toEqual(
+        expect.arrayContaining(['cc1@example.com', conversationContact])
+      ); // CC should contain cc1 and conversationContact
+      expect(result.cc).not.toContain(inboxEmail); // CC should NOT contain inboxEmail
+      expect(result.bcc).toEqual(['bcc1@example.com']); // BCC should only contain bcc1
+      expect(result.bcc).not.toContain(forwardToEmail); // BCC should NOT contain forwardToEmail
+      expect(result.bcc).not.toContain(conversationContact); // BCC should NOT contain conversationContact
+    });
   });
 });
