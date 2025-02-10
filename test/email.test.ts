@@ -2,7 +2,7 @@ import { getRecipients } from '../src';
 import {
   MessageType,
   IncomingEmailMessage,
-  // OutgoingEmailMessage,
+  OutgoingEmailMessage,
 } from '../src/types/message';
 
 const createIncomingEmail = ({
@@ -22,24 +22,24 @@ const createIncomingEmail = ({
   } as IncomingEmailMessage;
 };
 
-// const createOutgoingEmail = ({
-//   to = [],
-//   cc = [],
-//   bcc = [],
-// }: {
-//   to?: string[];
-//   cc?: string[];
-//   bcc?: string[];
-// }) => {
-//   return {
-//     message_type: MessageType.OUTGOING,
-//     content_attributes: {
-//       to_emails: to,
-//       cc_emails: cc,
-//       bcc_emails: bcc,
-//     },
-//   } as OutgoingEmailMessage;
-// };
+const createOutgoingEmail = ({
+  to = [],
+  cc = [],
+  bcc = [],
+}: {
+  to?: string[];
+  cc?: string[];
+  bcc?: string[];
+}) => {
+  return {
+    message_type: MessageType.OUTGOING,
+    content_attributes: {
+      to_emails: to,
+      cc_emails: cc,
+      bcc_emails: bcc,
+    },
+  } as OutgoingEmailMessage;
+};
 
 describe('getRecipients', () => {
   const conversationContact = 'contact@example.com';
@@ -195,24 +195,96 @@ describe('getRecipients', () => {
 
   describe('Outgoing Email', () => {
     describe('Single Recipient', () => {
-      test('should add the recipient to the "to" field', () => {});
+      test('should add the recipient to the "to" field', () => {
+        const toEmail = 'recipient@example.com';
+        const lastEmail = createOutgoingEmail({ to: [toEmail] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([toEmail]);
+      });
     });
 
     describe('Multiple Recipients', () => {
-      test('should add all recipients to the "to" field', () => {});
+      test('should add all recipients to the "to" field', () => {
+        const toEmails = ['recipient1@example.com', 'recipient2@example.com'];
+        const lastEmail = createOutgoingEmail({ to: toEmails });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual(toEmails);
+      });
     });
 
     describe('CC Recipients', () => {
-      test('should add emails in the "cc_emails" field to the "cc" array', () => {});
+      test('should add emails in the "cc_emails" field to the "cc" array', () => {
+        const ccEmails = ['cc1@example.com', 'cc2@example.com'];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          cc: ccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
+        expect(result.cc.length).toBeGreaterThanOrEqual(ccEmails.length);
+      });
     });
 
     describe('BCC Recipients', () => {
-      test('should add emails in the "bcc_emails" field to the "bcc" array', () => {});
-      test('should remove conversationContact from "bcc" if present', () => {});
+      test('should add emails in the "bcc_emails" field to the "bcc" array', () => {
+        const bccEmails = ['bcc1@example.com', 'bcc2@example.com'];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).toEqual(expect.arrayContaining(bccEmails));
+        expect(result.bcc.length).toBeGreaterThanOrEqual(bccEmails.length);
+      });
+
+      test('should remove conversationContact from "bcc" if present', () => {
+        const bccEmails = ['bcc1@example.com', conversationContact];
+        const lastEmail = createOutgoingEmail({
+          to: ['recipient@example.com'],
+          bcc: bccEmails,
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.bcc).not.toContain(conversationContact);
+      });
     });
 
     describe('To is Null', () => {
-      test('should not error when to is null', () => {});
+      test('should not error when to is null', () => {
+        // @ts-ignore
+        const lastEmail = createOutgoingEmail({ to: null });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([]); // Should be empty since there's no recipient
+      });
     });
   });
 
