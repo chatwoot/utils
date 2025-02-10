@@ -109,6 +109,18 @@ export function getRecipients(
     return true;
   });
 
+  bcc = bcc.filter(email => {
+    if (
+      email === inboxEmail ||
+      email === forwardToEmail ||
+      replyUUIDPattern.test(email)
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
   // Deduplicate each recipient list by converting to a Set then back to an array
   to = Array.from(new Set(to));
   cc = Array.from(new Set(cc));

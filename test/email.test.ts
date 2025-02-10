@@ -362,7 +362,12 @@ describe('getRecipients', () => {
         inboxEmail,
         forwardToEmail
       );
-      expect(result.cc).toEqual(['duplicate@example.com']);
+
+      expect(result.to).toEqual(['sender@example.com']);
+      expect(result.cc).toEqual([
+        'duplicate@example.com',
+        'contact@example.com',
+      ]);
     });
 
     test('should deduplicate emails in the "bcc" field', () => {
