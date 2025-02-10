@@ -274,7 +274,7 @@ describe('getRecipients', () => {
     });
 
     describe('To is Null', () => {
-      test('should not error when to is null', () => {
+      test('should reply to current contact', () => {
         // @ts-ignore
         const lastEmail = createOutgoingEmail({ to: null });
         const result = getRecipients(
