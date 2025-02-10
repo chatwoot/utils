@@ -283,7 +283,8 @@ describe('getRecipients', () => {
           inboxEmail,
           forwardToEmail
         );
-        expect(result.to).toEqual([]); // Should be empty since there's no recipient
+        expect(result.to).toEqual([conversationContact]); // Should be empty since there's no recipient
+        expect(result.cc).toEqual([]);
       });
     });
   });

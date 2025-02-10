@@ -71,7 +71,8 @@ export function getRecipients(
     to.push(...(emailAttributes.from ?? []));
   } else {
     // Otherwise, reply to the last recipient (for outgoing message)
-    to.push(...(emailAttributes.to ?? []));
+    // If there is no to_emails, reply to the conversation contact
+    to.push(...(emailAttributes.to ?? [conversationContact]));
   }
 
   // Start building the cc list, including additional recipients
@@ -82,7 +83,8 @@ export function getRecipients(
   }
 
   // Add the conversation contact to cc if the last email wasn't sent by them
-  if (!isLastEmailFromContact) {
+  // Ensure the message is an incoming one
+  if (!isLastEmailFromContact && isIncoming) {
     cc.push(conversationContact);
   }
 
