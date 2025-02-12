@@ -47,11 +47,12 @@ export function getRecipients(
     const {
       content_attributes: contentAttributes,
     } = lastEmail as OutgoingEmailMessage;
+
     const {
-      cc_emails: ccEmails,
-      bcc_emails: bccEmails,
-      to_emails: toEmails,
-    } = contentAttributes;
+      cc_emails: ccEmails = [],
+      bcc_emails: bccEmails = [],
+      to_emails: toEmails = [],
+    } = contentAttributes ?? {};
 
     emailAttributes = {
       cc: ccEmails,
