@@ -70,6 +70,18 @@ describe('getRecipients', () => {
       expect(result.cc).toEqual([]);
       expect(result.bcc).toEqual([]);
     });
+
+    test('should return empty arrays when lastEmail does not have content atttributes', () => {
+      const result = getRecipients(
+        {} as any,
+        conversationContact,
+        inboxEmail,
+        forwardToEmail
+      );
+      expect(result.to).toEqual([]);
+      expect(result.cc).toEqual([]);
+      expect(result.bcc).toEqual([]);
+    });
   });
 
   describe('Incoming Email', () => {
