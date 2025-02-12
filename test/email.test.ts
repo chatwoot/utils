@@ -71,7 +71,7 @@ describe('getRecipients', () => {
       expect(result.bcc).toEqual([]);
     });
 
-    test('should return empty arrays when lastEmail does not have content atttributes', () => {
+    test('should return empty arrays when lastEmail does not have content attributes', () => {
       const result = getRecipients(
         {} as any,
         conversationContact,
