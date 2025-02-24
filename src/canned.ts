@@ -9,8 +9,19 @@ const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
 const skipCodeBlocks = (str: string) => str.replace(/```(?:.|\n)+?```/g, '');
 
-export const capitalizeName = (name: string | null) => {
-  return (name || '').replace(/\b(\w)/g, s => s.toUpperCase());
+export const capitalizeName = (name: string | null): string => {
+  if (!name) return ''; // Return empty string for null or undefined input
+
+  return name
+    .split(' ') // Split the name into words based on spaces
+    .map(word => {
+      if (!word) return ''; // Handle empty strings that might result from multiple spaces
+
+      // Capitalize only the first character, leaving the rest unchanged
+      // This correctly handles accented characters like 'í' in 'Aríel'
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' '); // Rejoin the words with spaces
 };
 
 export const getFirstName = ({ user }: { user: Sender }) => {

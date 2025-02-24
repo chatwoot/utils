@@ -190,4 +190,13 @@ describe('#capitalizeName', () => {
   it('returns empty string if the name is null', () => {
     expect(capitalizeName(null)).toBe('');
   });
+  it('correctly handles names with accented characters', () => {
+    const accentedName1 = 'aríel';
+    const accentedName2 = 'josé maría';
+    const accentedName3 = 'françois';
+
+    expect(capitalizeName(accentedName1)).toBe('Aríel');
+    expect(capitalizeName(accentedName2)).toBe('José María');
+    expect(capitalizeName(accentedName3)).toBe('François');
+  });
 });
