@@ -14,6 +14,9 @@ const variables = {
   'contact.email': 'john.p@example.com',
   'contact.phone': '1234567890',
   'conversation.id': 1,
+  'conversation.code': 'CW123',
+  'inbox.id': 1,
+  'inbox.name': 'Inbox 1',
   'agent.first_name': 'Samuel',
   'agent.last_name': 'Smith',
   'agent.email': 'samuel@gmail.com',
@@ -51,6 +54,20 @@ describe('#replaceVariablesInMessage', () => {
       'hey John Doe, no issues. We will send the reset instructions to your email at john.p@example.com'
     );
   });
+
+  it('returns the message with conversation code', () => {
+    const message = 'Your TicketID is #{{conversation.code}}';
+    expect(replaceVariablesInMessage({ message, variables })).toBe(
+      'Your TicketID is #CW123'
+    );
+  });
+
+  it('returns the message with inbox name', () => {
+    const message = 'Welcome to {{inbox.name}}';
+    expect(replaceVariablesInMessage({ message, variables })).toBe(
+      'Welcome to Inbox 1'
+    );
+  }
 
   it('returns the message if the variable is not present in variables', () => {
     const message = 'Please dm me at {{contact.twitter}}';
@@ -102,6 +119,7 @@ describe('#getMessageVariables', () => {
         },
       },
       id: 1,
+      code: 'CW123',
       custom_attributes: {
         car_model: 'Tesla Model S',
         car_year: '2022',
@@ -117,8 +135,12 @@ describe('#getMessageVariables', () => {
       phone_number: '1234567890',
       custom_attributes: { priority: 'high' },
     };
+    const inbox = {
+      id: 1,
+      name: 'Inbox 1',
+    }
 
-    expect(getMessageVariables({ conversation, contact })).toEqual({
+    expect(getMessageVariables({ conversation, contact, inbox })).toEqual({
       'contact.name': 'John Doe',
       'contact.first_name': 'John',
       'contact.id': 3,
@@ -126,6 +148,9 @@ describe('#getMessageVariables', () => {
       'contact.email': 'john.doe@gmail.com',
       'contact.phone': '1234567890',
       'conversation.id': 1,
+      'conversation.code': 'CW123',
+      'inbox.id': 1,
+      'inbox.name': 'Inbox 1',
       'agent.name': 'Samuel Smith',
       'agent.first_name': 'Samuel',
       'agent.last_name': 'Smith',
