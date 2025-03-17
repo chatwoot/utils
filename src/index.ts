@@ -14,7 +14,15 @@ import {
 import { getRecipients } from './email';
 
 import { parseBoolean } from './string';
-import { sortAsc, quantile, clamp, getQuantileIntervals } from './math';
+import {
+  sortAsc,
+  quantile,
+  clamp,
+  getQuantileIntervals,
+  calculateCenterOffset,
+  applyRotationTransform,
+  normalizeToPercentage,
+} from './math';
 import {
   getMessageVariables,
   replaceVariablesInMessage,
@@ -37,6 +45,9 @@ export {
   getContrastingTextColor,
   getMessageVariables,
   getQuantileIntervals,
+  calculateCenterOffset,
+  applyRotationTransform,
+  normalizeToPercentage,
   getUndefinedVariablesInMessage,
   parseBoolean,
   quantile,
