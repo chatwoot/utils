@@ -217,6 +217,8 @@ describe('getRecipients', () => {
           forwardToEmail
         );
         expect(result.to).toEqual([toEmail]);
+        expect(result.cc).toEqual([]);
+        expect(result.bcc).toEqual([]);
       });
     });
 
