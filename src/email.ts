@@ -79,7 +79,8 @@ export function getRecipients(
   // Start building the cc list, including additional recipients
   // If the email had multiple recipients, include them in the cc list
   cc = emailAttributes.cc ? [...emailAttributes.cc] : [];
-  if (Array.isArray(emailAttributes.to)) {
+  // Only include 'to' recipients in cc for incoming emails, not for outgoing
+  if (Array.isArray(emailAttributes.to) && isIncoming) {
     cc.push(...emailAttributes.to);
   }
 
