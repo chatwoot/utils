@@ -81,4 +81,10 @@ describe('#splitWords', () => {
       'Mismatched quotes in input string'
     );
   });
+
+  test('preserves trailing empty field when input ends with a delimiter', () => {
+    expect(splitWords('apple,banana,')).toEqual(['apple', 'banana', '']);
+    expect(splitWords('apple,')).toEqual(['apple', '']);
+    expect(splitWords(',')).toEqual(['', '']);
+  });
 });

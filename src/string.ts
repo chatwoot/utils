@@ -68,9 +68,27 @@ export function splitWords(candidate: string): string[] {
     throw new Error('Mismatched quotes in input string');
   }
 
-  // Don't forget to add the last word if there is one
+  // Add the last word to the result array
+  //
+  // There are two cases we need to handle here:
+  //
+  // 1. The normal case: we need to add the last word if there is one.
+  //    This is because our loop only adds words when it encounters a delimiter,
+  //    but the last word won't have a delimiter after it.
+  //    Example: "a,b,c" -> After processing "a," and "b,", we still need to add "c"
+  //
+  // 2. Trailing delimiter case: In CSV parsing, trailing delimiters are significant
+  //    and indicate an empty field at the end.
+  //    Example: "a,b," represents ["a", "b", ""]
+  //
+  //    The normal flow only adds non-empty words after trimming, which means
+  //    if the input ends with a delimiter, the trailing empty field would be lost.
+  //    We need to handle this case separately to preserve the empty trailing field.
   if (currentWord.trim()) {
     result.push(currentWord.trim());
+  } else if (candidate.endsWith(',')) {
+    // If input ends with a delimiter, add an empty field
+    result.push('');
   }
 
   return result;
