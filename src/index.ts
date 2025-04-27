@@ -13,7 +13,7 @@ import {
 
 import { getRecipients } from './email';
 
-import { parseBoolean } from './string';
+import { parseBoolean, splitWords } from './string';
 import {
   sortAsc,
   quantile,
@@ -50,6 +50,7 @@ export {
   normalizeToPercentage,
   getUndefinedVariablesInMessage,
   parseBoolean,
+  splitWords,
   quantile,
   replaceVariablesInMessage,
   sortAsc,
