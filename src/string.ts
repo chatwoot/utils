@@ -38,24 +38,28 @@ export function splitWords(candidate: string): string[] {
   let currentWord = '';
   let inQuotes = false; // Tracks whether we're currently inside a quoted section
 
-  // Process the string character by character
+  // Process the string character by character:
+  // 1. Toggle quote state when we encounter double quotes (") - marking quoted sections
+  //    Quotes themselves are not included in the final words
+  // 2. When we hit a comma outside quotes, it's treated as a word separator:
+  //    - Current word is trimmed and added to results array
+  //    - Current word buffer is reset for the next word
+  // 3. Inside quoted sections, commas are treated as regular characters (part of the word)
+  // 4. All other characters are added to the current word being built
   for (let i = 0; i < candidate.length; i++) {
     const char = candidate[i];
 
-    // Toggle our "inside quotes" state when we encounter a quote character
     if (char === '"') {
       inQuotes = !inQuotes;
       continue; // Skip adding the quote character to the result
     }
 
-    // Only treat commas as delimiters when not inside quotes
     if (char === ',' && !inQuotes) {
       result.push(currentWord.trim()); // Add the completed word to results
       currentWord = ''; // Reset for the next word
       continue;
     }
 
-    // For all other characters, add to the current word
     currentWord += char;
   }
 
