@@ -93,3 +93,26 @@ export function splitWords(candidate: string): string[] {
 
   return result;
 }
+
+/**
+ * Joins an array of words into a string, properly quoting phrases that contain commas
+ * to ensure they can be correctly split later using splitWords.
+ *
+ * Example: ['apple, banana', 'cherry'] => '"apple, banana",cherry'
+ *
+ * @param {string[]} words - Array of words/phrases to join
+ * @return {string} - The joined string
+ */
+export function joinWords(words: string[]): string {
+  if (!words || words.length === 0) return '';
+
+  return words
+    .map(word => {
+      // If the word contains a comma, wrap it in double quotes
+      if (word.includes(',')) {
+        return `"${word}"`;
+      }
+      return word;
+    })
+    .join(',');
+}

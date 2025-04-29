@@ -1,4 +1,4 @@
-import { parseBoolean, splitWords } from '../src';
+import { parseBoolean, splitWords, joinWords } from '../src';
 
 describe('#parseBoolean', () => {
   test('returns true for input "true"', () => {
@@ -86,5 +86,67 @@ describe('#splitWords', () => {
     expect(splitWords('apple,banana,')).toEqual(['apple', 'banana', '']);
     expect(splitWords('apple,')).toEqual(['apple', '']);
     expect(splitWords(',')).toEqual(['', '']);
+  });
+});
+
+describe('#joinWords', () => {
+  test('joins array of words with commas', () => {
+    expect(joinWords(['apple', 'banana', 'cherry'])).toBe(
+      'apple,banana,cherry'
+    );
+  });
+
+  test('adds quotes around words containing commas', () => {
+    expect(joinWords(['apple, banana', 'cherry'])).toBe(
+      '"apple, banana",cherry'
+    );
+  });
+
+  test('handles empty array', () => {
+    expect(joinWords([])).toBe('');
+  });
+
+  test('handles undefined or null input', () => {
+    // @ts-ignore
+    expect(joinWords(undefined)).toBe('');
+    // @ts-ignore
+    expect(joinWords(null)).toBe('');
+  });
+
+  test('handles array with empty strings', () => {
+    expect(joinWords(['', ''])).toBe(',');
+    expect(joinWords(['apple', ''])).toBe('apple,');
+  });
+});
+
+describe('lossless conversion between splitWords and joinWords', () => {
+  test('splitting and joining simple string preserves original', () => {
+    const original = 'apple,banana,cherry';
+    const split = splitWords(original);
+    const joined = joinWords(split);
+    expect(joined).toBe(original);
+  });
+
+  test('splitting and joining string with quoted phrases preserves semantics', () => {
+    const original = '"apple, banana",cherry';
+    const split = splitWords(original);
+    const joined = joinWords(split);
+    expect(split).toEqual(['apple, banana', 'cherry']);
+    expect(splitWords(joined)).toEqual(split);
+  });
+
+  test('splitting and joining handles empty fields correctly', () => {
+    const original = 'apple,banana,';
+    const split = splitWords(original);
+    const joined = joinWords(split);
+    expect(joined).toBe(original);
+    expect(splitWords(joined)).toEqual(split);
+  });
+
+  test('joining and splitting preserves original array', () => {
+    const original = ['apple', 'banana, with comma', 'cherry'];
+    const joined = joinWords(original);
+    const split = splitWords(joined);
+    expect(split).toEqual(original);
   });
 });

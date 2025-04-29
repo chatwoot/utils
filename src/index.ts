@@ -13,7 +13,7 @@ import {
 
 import { getRecipients } from './email';
 
-import { parseBoolean, splitWords } from './string';
+import { parseBoolean, splitWords, joinWords } from './string';
 import {
   sortAsc,
   quantile,
@@ -49,6 +49,7 @@ export {
   applyRotationTransform,
   normalizeToPercentage,
   getUndefinedVariablesInMessage,
+  joinWords,
   parseBoolean,
   splitWords,
   quantile,
