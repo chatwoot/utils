@@ -48,7 +48,7 @@ describe('#splitWords', () => {
   });
 
   test('returns an empty array for input ""', () => {
-    expect(splitWords('')).toEqual(['']);
+    expect(splitWords('')).toEqual([]);
   });
 
   test('returns an array with a single word for input "apple"', () => {

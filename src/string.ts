@@ -32,7 +32,7 @@ export function parseBoolean(candidate: string | number) {
  */
 export function splitWords(candidate: string): string[] {
   // Handle empty input case
-  if (!candidate) return [''];
+  if (!candidate) return [];
 
   const result = [];
   let currentWord = '';
