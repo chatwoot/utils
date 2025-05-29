@@ -24,11 +24,7 @@ export const toURL = (input: string | URL | null | undefined): URL | null => {
     return new URL(input, window.location.origin);
   }
 
-  try {
-    return new URL(input as string);
-  } catch (error) {
-    return null;
-  }
+  return new URL(input as string);
 };
 
 /**

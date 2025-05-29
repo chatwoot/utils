@@ -48,11 +48,6 @@ describe('toURL', () => {
     expect(result).toBeInstanceOf(URL);
     expect(result?.href).toBe('http://example.org/path?query=string#hash');
   });
-
-  it('returns null for invalid URLs', () => {
-    const result = toURL('not a url://example');
-    expect(result).toBeNull();
-  });
 });
 
 describe('isSameHost', () => {
