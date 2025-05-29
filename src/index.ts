@@ -11,6 +11,8 @@ import {
   getFileInfo,
 } from './helpers';
 
+import { toURL, isSameHost } from './url';
+
 import { getRecipients } from './email';
 
 import { parseBoolean } from './string';
@@ -54,6 +56,8 @@ export {
   replaceVariablesInMessage,
   sortAsc,
   splitName,
+  toURL,
+  isSameHost,
   trimContent,
   downloadFile,
   getFileInfo,
