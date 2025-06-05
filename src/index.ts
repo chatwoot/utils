@@ -35,8 +35,11 @@ import { createTypingIndicator } from './typingStatus';
 
 import { evaluateSLAStatus } from './sla';
 
+import { coerceToDate } from './date';
+
 export {
   clamp,
+  coerceToDate,
   convertSecondsToTimeUnit,
   createTypingIndicator,
   debounce,
