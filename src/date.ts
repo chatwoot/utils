@@ -22,7 +22,9 @@
  * coerceToDate(null) // Returns null
  * coerceToDate('invalid-date') // Returns null
  */
-export const coerceToDate = (dateInput: string | number | null | undefined): Date | null => {
+export const coerceToDate = (
+  dateInput: string | number | null | undefined
+): Date | null => {
   if (dateInput == null) return null;
 
   let timestamp = typeof dateInput === 'number' ? dateInput : null;
