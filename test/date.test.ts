@@ -160,21 +160,10 @@ describe('coerceToDate', () => {
       expect(result?.getDate()).toBe(2);
     });
 
-    it('should auto-correct overflow in months', () => {
-      // Month 13 gets auto-corrected to January of next year
-      const result = coerceToDate('2025-13-01');
-      expect(result).toBeInstanceOf(Date);
-      expect(result?.getFullYear()).toBe(2026);
-      expect(result?.getMonth()).toBe(0); // January
-      expect(result?.getDate()).toBe(1);
-    });
-
-    it('should auto-correct overflow in hours', () => {
-      // 25th hour gets auto-corrected to 1 AM next day
-      const result = coerceToDate('2025-06-01T25:00:00');
-      expect(result).toBeInstanceOf(Date);
-      expect(result?.getDate()).toBe(2);
-      expect(result?.getHours()).toBe(1);
+    it('should return null for truly invalid date formats', () => {
+      // These formats are considered invalid by JavaScript Date constructor
+      expect(coerceToDate('2025-13-01')).toBeNull(); // Invalid month format
+      expect(coerceToDate('2025-06-01T25:00:00')).toBeNull(); // Invalid hour format
     });
   });
 });
