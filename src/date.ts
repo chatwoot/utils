@@ -9,9 +9,9 @@
  * - Simple date strings (e.g., "2025-06-01") - time defaults to 00:00:00
  * - Date strings with space-separated time (e.g., "2025-06-01 12:30:00")
  *
- * Note: This function follows JavaScript Date constructor behavior for invalid dates,
- * which means it auto-corrects overflow values (e.g., "2025-02-30" becomes "2025-03-02",
- * "2025-13-01" becomes "2026-01-01"). Only truly unparseable strings return null.
+ * Note: This function follows JavaScript Date constructor behavior for date parsing.
+ * Some invalid dates like "2025-02-30" auto-correct to valid dates (becomes "2025-03-02"),
+ * while malformed strings like "2025-13-01" or "2025-06-01T25:00:00" return null.
  *
  * @example
  * coerceToDate('2025-06-01') // Returns Date object set to 2025-06-01 00:00:00
