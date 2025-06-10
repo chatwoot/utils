@@ -9,6 +9,7 @@ import {
   splitName,
   downloadFile,
   getFileInfo,
+  formatNumber,
 } from './helpers';
 
 import { toURL, isSameHost } from './url';
@@ -65,4 +66,5 @@ export {
   downloadFile,
   getFileInfo,
   getRecipients,
+  formatNumber,
 };

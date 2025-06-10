@@ -322,3 +322,22 @@ export const getFileInfo = (url: string): FileInfo => {
     return defaultInfo;
   }
 };
+
+/**
+ * Formats a number with k/M suffixes
+ * @param {number | string | null | undefined} num - The number to format
+ * @returns {string} Formatted string (e.g., "1.2k", "2.3M", "999")
+ * @example
+ * formatNumber(1234)     // "1.2k"
+ * formatNumber(1000000)  // "1.0M"
+ * formatNumber(999)      // "999"
+ * formatNumber(12344)    // "12.3k"
+ */
+export const formatNumber = (
+  num: number | string | null | undefined
+): string => {
+  const n = Number(num) || 0;
+  if (Math.abs(n) >= 1e6) return `${(n / 1e6).toFixed(1)}M`;
+  if (Math.abs(n) >= 1e3) return `${(n / 1e3).toFixed(1)}k`;
+  return String(Math.round(n));
+};
