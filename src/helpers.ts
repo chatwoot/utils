@@ -340,5 +340,5 @@ export const formatNumber = (
   return new Intl.NumberFormat('en', {
     notation: 'compact',
     maximumFractionDigits: 1,
-  }).format(n);
+  } as Intl.NumberFormatOptions).format(n);
 };
