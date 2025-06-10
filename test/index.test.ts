@@ -4,6 +4,7 @@ import {
   formatDate,
   formatTime,
   trimContent,
+  formatNumber,
 } from '../src';
 
 describe('#getContrastingTextColor', () => {
@@ -91,5 +92,56 @@ describe('#trimContent', () => {
   });
   it('adds ellipsis if passed', () => {
     expect(trimContent('this is an example', 3, true)).toEqual('thi...');
+  });
+});
+
+describe('#formatNumber', () => {
+  it('should format numbers less than 1000 without suffix', () => {
+    expect(formatNumber(0)).toBe('0');
+    expect(formatNumber(1)).toBe('1');
+    expect(formatNumber(999)).toBe('999');
+    expect(formatNumber(500)).toBe('500');
+  });
+
+  it('should format thousands with k suffix', () => {
+    expect(formatNumber(1000)).toBe('1K');
+    expect(formatNumber(1234)).toBe('1.2K');
+    expect(formatNumber(1500)).toBe('1.5K');
+    expect(formatNumber(9999)).toBe('10K');
+    expect(formatNumber(10000)).toBe('10K');
+    expect(formatNumber(999999)).toBe('1M');
+  });
+
+  it('should format millions with M suffix', () => {
+    expect(formatNumber(1000000)).toBe('1M');
+    expect(formatNumber(1234567)).toBe('1.2M');
+    expect(formatNumber(9999999)).toBe('10M');
+    expect(formatNumber(12345678)).toBe('12.3M');
+  });
+
+  it('should handle decimal inputs', () => {
+    expect(formatNumber(1234.5)).toBe('1.2K');
+    expect(formatNumber(1999.99)).toBe('2K');
+    expect(formatNumber(1000000.5)).toBe('1M');
+  });
+
+  it('should handle string number inputs', () => {
+    expect(formatNumber('1234')).toBe('1.2K');
+    expect(formatNumber('1000000')).toBe('1M');
+    expect(formatNumber('999')).toBe('999');
+    expect(formatNumber('-1234')).toBe('-1.2K');
+  });
+
+  it('should handle invalid string inputs', () => {
+    expect(formatNumber('abc')).toBe('0');
+    expect(formatNumber('')).toBe('0');
+    expect(formatNumber('  ')).toBe('0');
+    expect(formatNumber('12abc34')).toBe('0');
+  });
+
+  it('should handle null and undefined and NaN', () => {
+    expect(formatNumber(null)).toBe('0');
+    expect(formatNumber(undefined)).toBe('0');
+    expect(formatNumber(NaN)).toBe('0');
   });
 });

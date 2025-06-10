@@ -322,3 +322,23 @@ export const getFileInfo = (url: string): FileInfo => {
     return defaultInfo;
   }
 };
+
+/**
+ * Formats a number with K/M/B/T suffixes using Intl.NumberFormat
+ * @param {number | string | null | undefined} num - The number to format
+ * @returns {string} Formatted string (e.g., "1.2K", "2.3M", "999")
+ * @example
+ * formatNumber(1234)     // "1.2K"
+ * formatNumber(1000000)  // "1M"
+ * formatNumber(999)      // "999"
+ * formatNumber(12344)    // "12.3K"
+ */
+export const formatNumber = (
+  num: number | string | null | undefined
+): string => {
+  const n = Number(num) || 0;
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 1,
+  } as Intl.NumberFormatOptions).format(n);
+};
