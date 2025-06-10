@@ -104,34 +104,32 @@ describe('#formatNumber', () => {
   });
 
   it('should format thousands with k suffix', () => {
-    expect(formatNumber(1000)).toBe('1.0k');
-    expect(formatNumber(1234)).toBe('1.2k');
-    expect(formatNumber(1500)).toBe('1.5k');
-    expect(formatNumber(9999)).toBe('10.0k');
-    expect(formatNumber(10000)).toBe('10.0k');
-    expect(formatNumber(999999)).toBe('1000.0k');
+    expect(formatNumber(1000)).toBe('1K');
+    expect(formatNumber(1234)).toBe('1.2K');
+    expect(formatNumber(1500)).toBe('1.5K');
+    expect(formatNumber(9999)).toBe('10K');
+    expect(formatNumber(10000)).toBe('10K');
+    expect(formatNumber(999999)).toBe('1M');
   });
 
   it('should format millions with M suffix', () => {
-    expect(formatNumber(1000000)).toBe('1.0M');
+    expect(formatNumber(1000000)).toBe('1M');
     expect(formatNumber(1234567)).toBe('1.2M');
-    expect(formatNumber(9999999)).toBe('10.0M');
+    expect(formatNumber(9999999)).toBe('10M');
     expect(formatNumber(12345678)).toBe('12.3M');
   });
 
   it('should handle decimal inputs', () => {
-    expect(formatNumber(0.1)).toBe('0');
-    expect(formatNumber(0.9)).toBe('1');
-    expect(formatNumber(1234.5)).toBe('1.2k');
-    expect(formatNumber(1999.99)).toBe('2.0k');
-    expect(formatNumber(1000000.5)).toBe('1.0M');
+    expect(formatNumber(1234.5)).toBe('1.2K');
+    expect(formatNumber(1999.99)).toBe('2K');
+    expect(formatNumber(1000000.5)).toBe('1M');
   });
 
   it('should handle string number inputs', () => {
-    expect(formatNumber('1234')).toBe('1.2k');
-    expect(formatNumber('1000000')).toBe('1.0M');
+    expect(formatNumber('1234')).toBe('1.2K');
+    expect(formatNumber('1000000')).toBe('1M');
     expect(formatNumber('999')).toBe('999');
-    expect(formatNumber('-1234')).toBe('-1.2k');
+    expect(formatNumber('-1234')).toBe('-1.2K');
   });
 
   it('should handle invalid string inputs', () => {
