@@ -63,7 +63,6 @@ export const getMessageVariables = ({
     'contact.phone': sender?.phone_number,
     'contact.id': sender?.id,
     'conversation.id': id,
-    'conversation.code': conversation.code,
     'inbox.id': inbox?.id,
     'inbox.name': inbox?.name,
     'agent.name': capitalizeName(assignee?.name || ''),

@@ -55,13 +55,6 @@ describe('#replaceVariablesInMessage', () => {
     );
   });
 
-  it('returns the message with conversation code', () => {
-    const message = 'Your TicketID is #{{conversation.code}}';
-    expect(replaceVariablesInMessage({ message, variables })).toBe(
-      'Your TicketID is #CW123'
-    );
-  });
-
   it('returns the message with inbox name', () => {
     const message = 'Welcome to {{inbox.name}}';
     expect(replaceVariablesInMessage({ message, variables })).toBe(
@@ -148,7 +141,6 @@ describe('#getMessageVariables', () => {
       'contact.email': 'john.doe@gmail.com',
       'contact.phone': '1234567890',
       'conversation.id': 1,
-      'conversation.code': 'CW123',
       'inbox.id': 1,
       'inbox.name': 'Inbox 1',
       'agent.name': 'Samuel Smith',
