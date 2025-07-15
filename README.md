@@ -25,4 +25,4 @@ Feel free to send us feedback on [Twitter](https://twitter.com/chatwootapp) or [
 
 If there's anything you'd like to chat about, please feel free to join our [Discord](https://discord.gg/cJXdrwS) chat!
 
-_Chatwoot_ &copy; 2017-2021, Chatwoot Inc - Released under the MIT License.
+_Chatwoot_ &copy; 2017-2025, Chatwoot Inc - Released under the MIT License.
