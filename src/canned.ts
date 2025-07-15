@@ -4,6 +4,7 @@ import {
   Variables,
   CustomAttributes,
   Contact,
+  Inbox,
 } from './types/conversation';
 const MESSAGE_VARIABLES_REGEX = /{{(.*?)}}/g;
 
@@ -41,9 +42,11 @@ export const getLastName = ({ user }: { user: Sender }) => {
 export const getMessageVariables = ({
   conversation,
   contact,
+  inbox,
 }: {
   conversation: Conversation;
   contact?: Contact;
+  inbox?: Inbox;
 }) => {
   const {
     meta: { assignee, sender },
@@ -60,6 +63,8 @@ export const getMessageVariables = ({
     'contact.phone': sender?.phone_number,
     'contact.id': sender?.id,
     'conversation.id': id,
+    'inbox.id': inbox?.id,
+    'inbox.name': inbox?.name,
     'agent.name': capitalizeName(assignee?.name || ''),
     'agent.first_name': getFirstName({ user: assignee }),
     'agent.last_name': getLastName({ user: assignee }),

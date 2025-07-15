@@ -1,6 +1,7 @@
 export interface Conversation {
   meta: Meta;
   id: number;
+  code: string;
   custom_attributes: CustomAttributes;
   first_reply_created_at: number;
   waiting_since: number;
@@ -26,6 +27,11 @@ export interface Contact {
   name?: string;
   phone_number?: string;
   custom_attributes?: CustomAttributes;
+}
+
+export interface Inbox {
+  id: number;
+  name: string;
 }
 
 export interface Assignee {
