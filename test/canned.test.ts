@@ -67,7 +67,7 @@ describe('#replaceVariablesInMessage', () => {
     expect(replaceVariablesInMessage({ message, variables })).toBe(
       'Welcome to Inbox 1'
     );
-  }
+  });
 
   it('returns the message if the variable is not present in variables', () => {
     const message = 'Please dm me at {{contact.twitter}}';
@@ -138,7 +138,7 @@ describe('#getMessageVariables', () => {
     const inbox = {
       id: 1,
       name: 'Inbox 1',
-    }
+    };
 
     expect(getMessageVariables({ conversation, contact, inbox })).toEqual({
       'contact.name': 'John Doe',
