@@ -1,4 +1,4 @@
-import { toURL, isSameHost } from '../src';
+import { toURL, isSameHost, isValidDomain } from '../src';
 
 describe('toURL', () => {
   it('returns null for falsy inputs', () => {
@@ -78,5 +78,48 @@ describe('isSameHost', () => {
 
     expect(isSameHost(url1, url2)).toBe(true);
     expect(isSameHost(url1, url3)).toBe(false);
+  });
+});
+
+describe('#isValidDomain', () => {
+  it('should return true for valid domains', () => {
+    expect(isValidDomain('')).toBe(true);
+    expect(isValidDomain('google.com')).toBe(true);
+    expect(isValidDomain('example.org')).toBe(true);
+    expect(isValidDomain('test.net')).toBe(true);
+    expect(isValidDomain('www.google.com')).toBe(true);
+    expect(isValidDomain('api.example.org')).toBe(true);
+    expect(isValidDomain('deep.nested.subdomain.com')).toBe(true);
+    expect(isValidDomain('my-site.com')).toBe(true);
+    expect(isValidDomain('test-domain.co.uk')).toBe(true);
+    expect(isValidDomain('123domain.org')).toBe(true);
+    expect(isValidDomain('测试.网络')).toBe(true);
+    expect(isValidDomain('пример.рф')).toBe(true);
+    expect(isValidDomain('example.co.uk')).toBe(true);
+  });
+
+  it('should return false for invalid domains', () => {
+    const longDomain = 'a'.repeat(250) + '.com';
+    expect(isValidDomain('localhost')).toBe(false);
+    expect(isValidDomain('example.com!')).toBe(false);
+    expect(isValidDomain('test@domain.com')).toBe(false);
+    expect(isValidDomain('domain with spaces.com')).toBe(false);
+    expect(isValidDomain('test_domain.com')).toBe(false);
+    expect(isValidDomain('example..com')).toBe(false);
+    expect(isValidDomain('..example.com')).toBe(false);
+    expect(isValidDomain('example.com..')).toBe(false);
+    expect(isValidDomain('-example-.com')).toBe(false);
+    expect(isValidDomain(longDomain)).toBe(false);
+    expect(isValidDomain('192.168.1.1')).toBe(false);
+    expect(isValidDomain('127.0.0.1')).toBe(false);
+    expect(isValidDomain('example.com/path/to/page')).toBe(false);
+    expect(isValidDomain('http://example.com')).toBe(false);
+    expect(isValidDomain('https://example.com')).toBe(false);
+    expect(isValidDomain((null as unknown) as string)).toBe(false);
+    expect(isValidDomain((undefined as unknown) as string)).toBe(false);
+    expect(isValidDomain((123 as unknown) as string)).toBe(false);
+    expect(isValidDomain(({} as unknown) as string)).toBe(false);
+    expect(isValidDomain(([] as unknown) as string)).toBe(false);
+    expect(isValidDomain('   ')).toBe(false);
   });
 });
