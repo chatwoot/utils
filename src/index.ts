@@ -12,7 +12,7 @@ import {
   formatNumber,
 } from './helpers';
 
-import { toURL, isSameHost } from './url';
+import { toURL, isSameHost, isValidDomain } from './url';
 
 import { getRecipients } from './email';
 
@@ -62,6 +62,7 @@ export {
   splitName,
   toURL,
   isSameHost,
+  isValidDomain,
   trimContent,
   downloadFile,
   getFileInfo,

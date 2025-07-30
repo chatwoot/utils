@@ -50,3 +50,18 @@ export const isSameHost = (
     return false;
   }
 };
+
+/**
+ * Check if a string is a valid domain name.
+ * An empty string is allowed and considered valid.
+ *
+ * @param domain Domain to validate.
+ * @returns Whether the domain matches the rules.
+ */
+export const isValidDomain = (domain: string): boolean => {
+  if (domain === '') return true;
+
+  const domainRegex = /^(?!-)(?!.*--)[\p{L}0-9-]{1,63}(?<!-)(?:\.(?!-)(?!.*--)[\p{L}0-9-]{1,63}(?<!-))*\.[\p{L}]{2,63}$/u;
+
+  return domainRegex.test(domain) && domain.length <= 253;
+};
