@@ -37,6 +37,10 @@ import { createTypingIndicator } from './typingStatus';
 import { evaluateSLAStatus } from './sla';
 
 import { coerceToDate } from './date';
+import {
+  getAllowedFileTypesByChannel,
+  getMaxUploadSizeByChannel,
+} from './fileUploadRules';
 
 export {
   clamp,
@@ -68,4 +72,6 @@ export {
   getFileInfo,
   getRecipients,
   formatNumber,
+  getAllowedFileTypesByChannel,
+  getMaxUploadSizeByChannel,
 };
