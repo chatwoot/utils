@@ -37,7 +37,7 @@ interface GetMaxUploadParams extends GetChannelParams {
 }
 
 // ---------- Channels ----------
-const INBOX_TYPES = {
+export const INBOX_TYPES = {
   WEB: 'Channel::WebWidget',
   FB: 'Channel::FacebookPage',
   TWITTER: 'Channel::TwitterProfile',
