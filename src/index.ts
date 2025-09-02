@@ -16,7 +16,7 @@ import { toURL, isSameHost, isValidDomain } from './url';
 
 import { getRecipients } from './email';
 
-import { parseBoolean } from './string';
+import { parseBoolean, splitWords, joinWords } from './string';
 import {
   sortAsc,
   quantile,
@@ -59,7 +59,9 @@ export {
   applyRotationTransform,
   normalizeToPercentage,
   getUndefinedVariablesInMessage,
+  joinWords,
   parseBoolean,
+  splitWords,
   quantile,
   replaceVariablesInMessage,
   sortAsc,
