@@ -16,7 +16,7 @@ import { toURL, isSameHost, isValidDomain } from './url';
 
 import { getRecipients } from './email';
 
-import { parseBoolean } from './string';
+import { parseBoolean, sanitizeTextForRender } from './string';
 import {
   sortAsc,
   quantile,
@@ -62,6 +62,7 @@ export {
   parseBoolean,
   quantile,
   replaceVariablesInMessage,
+  sanitizeTextForRender,
   sortAsc,
   splitName,
   toURL,
