@@ -32,7 +32,7 @@ export function parseBoolean(candidate: string | number) {
  * - Complex nested quotes or edge cases may not be handled perfectly
  * - For more complex HTML sanitization needs, consider using a proper HTML parser
  *
- * @param {string} text - The text to sanitize. Can be null or undefined.
+ * @param {string | null | undefined} text - The text to sanitize. Can be null or undefined.
  * @returns {string} The sanitized text safe for HTML rendering, or the original value if null/undefined.
  *
  * @example
@@ -42,7 +42,7 @@ export function parseBoolean(candidate: string | number) {
  * sanitizeTextForRender('Price < $100 <strong>Sale!</strong>') // 'Price &lt; $100 <strong>Sale!</strong>'
  */
 export function sanitizeTextForRender(text: string | null | undefined) {
-  if (!text) return text;
+  if (!text) return '';
 
   return (
     text
@@ -72,8 +72,9 @@ export function sanitizeTextForRender(text: string | null | undefined) {
       //     \s+    - whitespace before attributes
       //     [^>]*  - any characters except '>' (attribute content)
       //   )?       - attributes are optional
+      //   \/?      - optional self-closing slash before >
       // )          - end lookbehind
       // >          - matches '>'
-      .replace(/(?<!<\/?\w+(?:\s+[^>]*)?)>/g, '&gt;')
+      .replace(/(?<!<\/?\w+(?:\s+[^>]*)?\/?)>/g, '&gt;')
   );
 }
