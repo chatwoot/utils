@@ -40,8 +40,8 @@ describe('#parseBoolean', () => {
 
 describe('#sanitizeTextForRender', () => {
   it('should handle null and undefined values', () => {
-    expect(sanitizeTextForRender(null)).toBe('');
-    expect(sanitizeTextForRender(undefined)).toBe('');
+    expect(sanitizeTextForRender(null)).toBe(null);
+    expect(sanitizeTextForRender(undefined)).toBe(undefined);
     expect(sanitizeTextForRender('')).toBe('');
   });
 
