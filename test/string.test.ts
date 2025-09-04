@@ -151,16 +151,42 @@ describe('#sanitizeTextForRender', () => {
 
   it('should handle self-closing tags correctly', () => {
     expect(sanitizeTextForRender('<br />')).toBe('<br />');
-    expect(sanitizeTextForRender('<img src="test.jpg" />')).toBe('<img src="test.jpg" />');
-    expect(sanitizeTextForRender('<input type="text" value="test" />')).toBe('<input type="text" value="test" />');
+    expect(sanitizeTextForRender('<img src="test.jpg" />')).toBe(
+      '<img src="test.jpg" />'
+    );
+    expect(sanitizeTextForRender('<input type="text" value="test" />')).toBe(
+      '<input type="text" value="test" />'
+    );
     expect(sanitizeTextForRender('<hr/>')).toBe('<hr/>');
-    expect(sanitizeTextForRender('Text before <br /> text after')).toBe('Text before <br /> text after');
-    expect(sanitizeTextForRender('<meta charset="UTF-8" />')).toBe('<meta charset="UTF-8" />');
+    expect(sanitizeTextForRender('Text before <br /> text after')).toBe(
+      'Text before <br /> text after'
+    );
+    expect(sanitizeTextForRender('<meta charset="UTF-8" />')).toBe(
+      '<meta charset="UTF-8" />'
+    );
   });
 
   it('should handle complex URLs in attributes', () => {
-    expect(sanitizeTextForRender('<img src="https://example.com/image.jpg?width=100&height=200&format=webp" />')).toBe('<img src="https://example.com/image.jpg?width=100&height=200&format=webp" />');
-    expect(sanitizeTextForRender('<a href="https://api.example.com/v2/users/123/profile?include=posts&sort=desc">Profile</a>')).toBe('<a href="https://api.example.com/v2/users/123/profile?include=posts&sort=desc">Profile</a>');
-    expect(sanitizeTextForRender('<iframe src="//cdn.example.com/embed/video/12345?autoplay=1&loop=0" />')).toBe('<iframe src="//cdn.example.com/embed/video/12345?autoplay=1&loop=0" />');
+    expect(
+      sanitizeTextForRender(
+        '<img src="https://example.com/image.jpg?width=100&height=200&format=webp" />'
+      )
+    ).toBe(
+      '<img src="https://example.com/image.jpg?width=100&height=200&format=webp" />'
+    );
+    expect(
+      sanitizeTextForRender(
+        '<a href="https://api.example.com/v2/users/123/profile?include=posts&sort=desc">Profile</a>'
+      )
+    ).toBe(
+      '<a href="https://api.example.com/v2/users/123/profile?include=posts&sort=desc">Profile</a>'
+    );
+    expect(
+      sanitizeTextForRender(
+        '<iframe src="//cdn.example.com/embed/video/12345?autoplay=1&loop=0" />'
+      )
+    ).toBe(
+      '<iframe src="//cdn.example.com/embed/video/12345?autoplay=1&loop=0" />'
+    );
   });
 });
