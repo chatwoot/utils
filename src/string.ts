@@ -3,7 +3,6 @@
  * @param {string | number} candidate - The string boolean value to be parsed
  * @return {boolean} - The parsed boolean value
  */
-
 export function parseBoolean(candidate: string | number) {
   try {
     // lowercase the string, so TRUE becomes true
