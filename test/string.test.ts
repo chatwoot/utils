@@ -47,44 +47,61 @@ describe('#sanitizeTextForRender', () => {
 
   it('should convert newlines to <br> tags', () => {
     expect(sanitizeTextForRender('Line 1\nLine 2')).toBe('Line 1<br>Line 2');
-    expect(sanitizeTextForRender('Multiple\n\nNewlines')).toBe('Multiple<br><br>Newlines');
+    expect(sanitizeTextForRender('Multiple\n\nNewlines')).toBe(
+      'Multiple<br><br>Newlines'
+    );
   });
 
   it('should escape stray < characters', () => {
     expect(sanitizeTextForRender('if x < 5')).toBe('if x &lt; 5');
-    expect(sanitizeTextForRender('< this is not a tag')).toBe('&lt; this is not a tag');
+    expect(sanitizeTextForRender('< this is not a tag')).toBe(
+      '&lt; this is not a tag'
+    );
     expect(sanitizeTextForRender('price < $100')).toBe('price &lt; $100');
   });
 
   it('should escape stray > characters', () => {
     expect(sanitizeTextForRender('if x > 5')).toBe('if x &gt; 5');
-    expect(sanitizeTextForRender('this is not a tag >')).toBe('this is not a tag &gt;');
+    expect(sanitizeTextForRender('this is not a tag >')).toBe(
+      'this is not a tag &gt;'
+    );
     expect(sanitizeTextForRender('score > 90%')).toBe('score &gt; 90%');
   });
 
   it('should escape both stray < and > characters', () => {
     expect(sanitizeTextForRender('5 < x < 10')).toBe('5 &lt; x &lt; 10');
-    expect(sanitizeTextForRender('x > 5 && y < 10')).toBe('x &gt; 5 && y &lt; 10');
+    expect(sanitizeTextForRender('x > 5 && y < 10')).toBe(
+      'x &gt; 5 && y &lt; 10'
+    );
   });
 
   it('should preserve valid HTML tags', () => {
     expect(sanitizeTextForRender('<div>Hello</div>')).toBe('<div>Hello</div>');
-    expect(sanitizeTextForRender('<span class="test">World</span>')).toBe('<span class="test">World</span>');
+    expect(sanitizeTextForRender('<span class="test">World</span>')).toBe(
+      '<span class="test">World</span>'
+    );
     expect(sanitizeTextForRender('<br>')).toBe('<br>');
-    expect(sanitizeTextForRender('<img src="test.jpg" />')).toBe('<img src="test.jpg" />');
+    expect(sanitizeTextForRender('<img src="test.jpg" />')).toBe(
+      '<img src="test.jpg" />'
+    );
   });
 
   it('should preserve nested HTML tags', () => {
-    expect(sanitizeTextForRender('<div><span>Nested</span></div>')).toBe('<div><span>Nested</span></div>');
-    expect(sanitizeTextForRender('<ul><li>Item 1</li><li>Item 2</li></ul>'))
-      .toBe('<ul><li>Item 1</li><li>Item 2</li></ul>');
+    expect(sanitizeTextForRender('<div><span>Nested</span></div>')).toBe(
+      '<div><span>Nested</span></div>'
+    );
+    expect(
+      sanitizeTextForRender('<ul><li>Item 1</li><li>Item 2</li></ul>')
+    ).toBe('<ul><li>Item 1</li><li>Item 2</li></ul>');
   });
 
   it('should handle mixed content with valid tags and stray characters', () => {
-    expect(sanitizeTextForRender('Price < $100 <strong>on sale</strong>'))
-      .toBe('Price &lt; $100 <strong>on sale</strong>');
-    expect(sanitizeTextForRender('<p>x > 5</p> and y < 10'))
-      .toBe('<p>x &gt; 5</p> and y &lt; 10');
+    expect(sanitizeTextForRender('Price < $100 <strong>on sale</strong>')).toBe(
+      'Price &lt; $100 <strong>on sale</strong>'
+    );
+    expect(sanitizeTextForRender('<p>x > 5</p> and y < 10')).toBe(
+      '<p>x &gt; 5</p> and y &lt; 10'
+    );
   });
 
   it('should handle edge cases with malformed HTML-like content', () => {
@@ -94,22 +111,30 @@ describe('#sanitizeTextForRender', () => {
   });
 
   it('should handle email addresses and URLs with angle brackets', () => {
-    expect(sanitizeTextForRender('Contact: <user@example.com>'))
-      .toBe('Contact: &lt;user@example.com&gt;');
-    expect(sanitizeTextForRender('Email me at < user@example.com >'))
-      .toBe('Email me at &lt; user@example.com &gt;');
+    expect(sanitizeTextForRender('Contact: <user@example.com>')).toBe(
+      'Contact: &lt;user@example.com&gt;'
+    );
+    expect(sanitizeTextForRender('Email me at < user@example.com >')).toBe(
+      'Email me at &lt; user@example.com &gt;'
+    );
   });
 
   it('should handle mathematical expressions', () => {
-    expect(sanitizeTextForRender('if (x < y && y > z)')).toBe('if (x &lt; y && y &gt; z)');
-    expect(sanitizeTextForRender('array[i] < array[j]')).toBe('array[i] &lt; array[j]');
+    expect(sanitizeTextForRender('if (x < y && y > z)')).toBe(
+      'if (x &lt; y && y &gt; z)'
+    );
+    expect(sanitizeTextForRender('array[i] < array[j]')).toBe(
+      'array[i] &lt; array[j]'
+    );
   });
 
   it('should handle HTML entities within valid tags', () => {
-    expect(sanitizeTextForRender('<div>&lt;escaped&gt;</div>'))
-      .toBe('<div>&lt;escaped&gt;</div>');
-    expect(sanitizeTextForRender('<span>already &amp; escaped</span>'))
-      .toBe('<span>already &amp; escaped</span>');
+    expect(sanitizeTextForRender('<div>&lt;escaped&gt;</div>')).toBe(
+      '<div>&lt;escaped&gt;</div>'
+    );
+    expect(sanitizeTextForRender('<span>already &amp; escaped</span>')).toBe(
+      '<span>already &amp; escaped</span>'
+    );
   });
 
   it('should handle complex real-world email content', () => {
