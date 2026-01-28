@@ -43,6 +43,15 @@ export function getRecipients(
       from: email?.from || [],
       to: [],
     };
+
+    // Fallback: If from is empty for incoming messages (e.g., API-created),
+    // use the conversation contact as the sender
+    if (
+      (!emailAttributes.from || emailAttributes.from.length === 0) &&
+      conversationContact
+    ) {
+      emailAttributes.from = [conversationContact];
+    }
   } else {
     const {
       content_attributes: contentAttributes,

@@ -191,7 +191,7 @@ describe('getRecipients', () => {
     });
 
     describe('From is Null', () => {
-      test('should not error when from is null', () => {
+      test('should fallback to conversationContact when from is null', () => {
         // @ts-ignore
         const lastEmail = createIncomingEmail({ from: null });
         const result = getRecipients(
@@ -200,7 +200,51 @@ describe('getRecipients', () => {
           inboxEmail,
           forwardToEmail
         );
-        expect(result.to).toEqual([]); // Should be empty since there's no sender
+        // When from is null, fallback to conversationContact
+        expect(result.to).toEqual([conversationContact]);
+        expect(result.cc).not.toContain(conversationContact);
+      });
+    });
+
+    describe('API-created Email (missing from field)', () => {
+      test('should use conversationContact as "to" when from is empty', () => {
+        // API-created conversations (e.g., contact forms) have incoming messages
+        // without the email.from field populated
+        const lastEmail = createIncomingEmail({ from: [] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([conversationContact]);
+      });
+
+      test('should NOT add conversationContact to "cc" when from is empty', () => {
+        // When from is empty and we fallback to conversationContact for "to",
+        // we should not also add them to "cc"
+        const lastEmail = createIncomingEmail({ from: [] });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).not.toContain(conversationContact);
+      });
+
+      test('should preserve cc recipients when from is empty', () => {
+        const ccEmails = ['cc1@example.com', 'cc2@example.com'];
+        const lastEmail = createIncomingEmail({ from: [], cc: ccEmails });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([conversationContact]);
+        expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
+        expect(result.cc).not.toContain(conversationContact);
       });
     });
   });
