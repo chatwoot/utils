@@ -49,6 +49,7 @@ export const INBOX_TYPES = {
   LINE: 'Channel::Line',
   SMS: 'Channel::Sms',
   INSTAGRAM: 'Channel::Instagram',
+  TIKTOK: 'Channel::Tiktok',
   VOICE: 'Channel::Voice',
 } as const;
 
@@ -67,6 +68,7 @@ type ChannelConfigs = Partial<Record<ChannelKey, ChannelConfig>> & {
  * WHATSAPP CLOUD: https://developers.facebook.com/docs/whatsapp/cloud-api/reference/media#supported-media-types
  * TWILIO WHATSAPP: https://www.twilio.com/docs/whatsapp/guidance-whatsapp-media-messages
  * TWILIO SMS: https://www.twilio.com/docs/messaging/guides/accepted-mime-types
+ * TIKTOK: https://business-api.tiktok.com/portal/docs?id=1832184403754242
  */
 
 // ---------- Central config ----------
@@ -174,6 +176,15 @@ const CHANNEL_CONFIGS: ChannelConfigs = {
         video: ['mp4'],
       },
       maxByCategory: { image: 10 },
+    },
+  },
+
+  [INBOX_TYPES.TIKTOK]: {
+    '*': {
+      mimeGroups: {
+        image: ['jpeg', 'png'],
+      },
+      maxByCategory: { image: 3 },
     },
   },
 
