@@ -54,7 +54,7 @@ export const INBOX_TYPES = {
 } as const;
 
 // derive key type AFTER INBOX_TYPES is declared
-type ChannelKey = typeof INBOX_TYPES[keyof typeof INBOX_TYPES];
+type ChannelKey = (typeof INBOX_TYPES)[keyof typeof INBOX_TYPES];
 
 // CHANNEL_CONFIGS shape: channels are optional; default node requires max
 type ChannelConfigs = Partial<Record<ChannelKey, ChannelConfig>> & {
@@ -88,33 +88,36 @@ type ChannelConfigs = Partial<Record<ChannelKey, ChannelConfig>> & {
  *  2. channel + "*" fallback
  *  3. global default
  */
+
+const STANDARD_TEXT_MIMES = ['csv', 'plain', 'rtf', 'xml'];
+const STANDARD_APPLICATION_MIMES = [
+  'json',
+  'pdf',
+  'xml',
+  'zip',
+  'x-7z-compressed',
+  'vnd.rar',
+  'x-tar',
+  'msword',
+  'vnd.ms-excel',
+  'vnd.ms-powerpoint',
+  'vnd.oasis.opendocument.text',
+  'vnd.openxmlformats-officedocument.presentationml.presentation',
+  'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
+const STANDARD_EXTENSIONS = ['.3gpp', '.xls', '.xlsx'];
+
 const CHANNEL_CONFIGS: ChannelConfigs = {
   default: {
     mimeGroups: {
       image: ['*'],
       audio: ['*'],
       video: ['*'],
-      text: ['csv', 'plain', 'rtf', 'xml'],
-      application: [
-        'json',
-        'pdf',
-        'xml',
-        'zip',
-        'x-7z-compressed',
-        'vnd.rar',
-        'x-tar',
-        'msword',
-        'vnd.ms-excel',
-        'vnd.ms-powerpoint',
-        'vnd.oasis.opendocument.text',
-        'vnd.openxmlformats-officedocument.presentationml.presentation',
-        'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'x-pkcs12',
-        'pkcs12',
-      ],
+      text: STANDARD_TEXT_MIMES,
+      application: [...STANDARD_APPLICATION_MIMES, 'x-pkcs12', 'pkcs12'],
     },
-    extensions: ['.3gpp', '.xls', '.xlsx', '.pfx'],
+    extensions: [...STANDARD_EXTENSIONS, '.pfx'],
     max: 40,
   },
 
@@ -193,7 +196,17 @@ const CHANNEL_CONFIGS: ChannelConfigs = {
   },
 
   [INBOX_TYPES.TWILIO]: {
-    sms: { max: 5 },
+    sms: {
+      mimeGroups: {
+        image: ['jpeg', 'png'],
+        audio: ['*'],
+        video: ['*'],
+        text: STANDARD_TEXT_MIMES,
+        application: STANDARD_APPLICATION_MIMES,
+      },
+      extensions: STANDARD_EXTENSIONS,
+      max: 5,
+    },
     whatsapp: {
       mimeGroups: {
         image: ['png', 'jpeg'],
