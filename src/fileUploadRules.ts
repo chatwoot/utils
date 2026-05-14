@@ -110,9 +110,11 @@ const CHANNEL_CONFIGS: ChannelConfigs = {
         'vnd.openxmlformats-officedocument.presentationml.presentation',
         'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'x-pkcs12',
+        'pkcs12',
       ],
     },
-    extensions: ['.3gpp'],
+    extensions: ['.3gpp', '.xls', '.xlsx', '.pfx'],
     max: 40,
   },
 
