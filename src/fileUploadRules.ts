@@ -54,7 +54,7 @@ export const INBOX_TYPES = {
 } as const;
 
 // derive key type AFTER INBOX_TYPES is declared
-type ChannelKey = (typeof INBOX_TYPES)[keyof typeof INBOX_TYPES];
+type ChannelKey = typeof INBOX_TYPES[keyof typeof INBOX_TYPES];
 
 // CHANNEL_CONFIGS shape: channels are optional; default node requires max
 type ChannelConfigs = Partial<Record<ChannelKey, ChannelConfig>> & {
