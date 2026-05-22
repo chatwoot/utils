@@ -1,7 +1,7 @@
 import {
-  INBOX_TYPES,
   getAllowedFileTypesByChannel,
   getMaxUploadSizeByChannel,
+  INBOX_TYPES,
 } from '../src/fileUploadRules';
 
 describe('uploadRules helper', () => {
@@ -15,6 +15,9 @@ describe('uploadRules helper', () => {
       expect(accept).toContain('text/plain');
       expect(accept).toContain('application/json');
       expect(accept).toContain('.3gpp');
+      expect(accept).toContain('application/x-pkcs12');
+      expect(accept).toContain('application/pkcs12');
+      expect(accept).toContain('.pfx');
     });
 
     it('returns WhatsApp specific accept list', () => {
@@ -33,6 +36,8 @@ describe('uploadRules helper', () => {
       expect(accept).not.toContain('application/json');
       expect(accept).not.toContain('.3gpp');
       expect(accept).not.toContain('image/gif');
+      expect(accept).not.toContain('application/x-pkcs12');
+      expect(accept).not.toContain('.pfx');
     });
 
     it('returns Instagram specific accept list', () => {
@@ -73,13 +78,25 @@ describe('uploadRules helper', () => {
       expect(accept).not.toContain('audio/mp3');
     });
 
-    it('falls back to default accept list for Twilio SMS (no mimeGroups)', () => {
+    it('returns Twilio SMS accept list (default-aligned, excluding PFX)', () => {
       const accept = getAllowedFileTypesByChannel({
         channelType: INBOX_TYPES.TWILIO,
         medium: 'sms',
       });
-      expect(accept).toContain('image/*');
+      expect(accept).toContain('image/jpeg');
+      expect(accept).toContain('image/png');
+      expect(accept).not.toContain('image/*');
+      expect(accept).not.toContain('image/gif');
+      expect(accept).toContain('audio/*');
+      expect(accept).toContain('video/*');
+      expect(accept).toContain('text/plain');
+      expect(accept).toContain('application/pdf');
+      expect(accept).toContain('application/json');
       expect(accept).toContain('.3gpp');
+      expect(accept).toContain('.xls');
+      expect(accept).not.toContain('application/x-pkcs12');
+      expect(accept).not.toContain('application/pkcs12');
+      expect(accept).not.toContain('.pfx');
     });
 
     it('handles empty object parameter', () => {
