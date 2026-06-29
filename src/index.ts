@@ -124,22 +124,4 @@ export {
   MEDIA_FORMATS,
 };
 
-export type {
-  WhatsAppTemplateHeaderFormat,
-  WhatsAppTemplateButton,
-  WhatsAppTemplateComponent,
-  WhatsAppMessageTemplate,
-  TwilioContentTemplate,
-  TwilioContentTemplates,
-  TemplatePlatform,
-  NormalizedTemplateHeader,
-  NormalizedTemplateButton,
-  NormalizedTemplate,
-  TemplateButtonParam,
-  WhatsAppProcessedParams,
-  TwilioProcessedParams,
-  TemplateSendParams,
-  TemplateFormState,
-} from './types/template';
-
-export type { PreviewSegment } from './template';
+export * from './types/template';

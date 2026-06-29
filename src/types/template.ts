@@ -61,6 +61,8 @@ export interface TwilioContentTemplates {
 
 export type TemplatePlatform = 'whatsapp' | 'twilio';
 
+export type PreviewSegment = { text: string; filled: boolean };
+
 export interface NormalizedTemplateHeader {
   format: WhatsAppTemplateHeaderFormat;
   text?: string;

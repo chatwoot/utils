@@ -3,6 +3,7 @@ import {
   NormalizedTemplate,
   NormalizedTemplateButton,
   NormalizedTemplateHeader,
+  PreviewSegment,
   TemplateButtonParam,
   TemplateFormState,
   TemplateSendParams,
@@ -66,10 +67,11 @@ export const renderTemplatePreview = (
 
 export const renderTemplateLabel = (body: string): string => {
   if (!body) return '';
-  return body.replace(VARIABLE_REGEX, (_match, rawKey) => `{ ${rawKey.trim()} }`);
+  return body.replace(
+    VARIABLE_REGEX,
+    (_match, rawKey) => `{ ${rawKey.trim()} }`
+  );
 };
-
-export type PreviewSegment = { text: string; filled: boolean };
 
 export const buildPreviewSegments = (
   body: string,
@@ -82,7 +84,10 @@ export const buildPreviewSegments = (
   let match: RegExpExecArray | null;
   while ((match = regex.exec(body)) !== null) {
     if (match.index > lastIndex) {
-      segments.push({ text: body.slice(lastIndex, match.index), filled: false });
+      segments.push({
+        text: body.slice(lastIndex, match.index),
+        filled: false,
+      });
     }
     const key = match[1].trim();
     const value = values[key];
@@ -324,7 +329,9 @@ export const isTemplateComplete = (
   if (template.variables.some(key => !isFilled(state.bodyValues[key])))
     return false;
   if (
-    template.buttons?.some(button => !isFilled(state.buttonValues[button.index]))
+    template.buttons?.some(
+      button => !isFilled(state.buttonValues[button.index])
+    )
   )
     return false;
   return true;
