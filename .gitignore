@@ -3,4 +3,5 @@
 node_modules
 dist
 docs
-coveragepackage-lock.json
+coverage
+package-lock.json
