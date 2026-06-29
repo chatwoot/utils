@@ -12,7 +12,12 @@ import {
   formatNumber,
 } from './helpers';
 
-import { toURL, isSameHost, isValidDomain } from './url';
+import {
+  toURL,
+  isSameHost,
+  isValidDomain,
+  extractFilenameFromUrl,
+} from './url';
 
 import { getRecipients } from './email';
 
@@ -42,6 +47,28 @@ import {
   getMaxUploadSizeByChannel,
 } from './fileUploadRules';
 
+import {
+  extractVariables,
+  renderTemplatePreview,
+  renderTemplateLabel,
+  buildPreviewSegments,
+  isSendableTemplate,
+  hasMediaHeader,
+  isDocumentHeader,
+  getMediaType,
+  getHeaderSubtitle,
+  normalizeWhatsApp,
+  normalizeTwilio,
+  getTemplates,
+  filterTemplatesByQuery,
+  createEmptyFormState,
+  isTemplateComplete,
+  buildTemplateParams,
+  renderTemplateMessage,
+  buildTemplateSendPayload,
+  MEDIA_FORMATS,
+} from './template';
+
 export {
   clamp,
   coerceToDate,
@@ -68,6 +95,7 @@ export {
   toURL,
   isSameHost,
   isValidDomain,
+  extractFilenameFromUrl,
   trimContent,
   downloadFile,
   getFileInfo,
@@ -75,4 +103,43 @@ export {
   formatNumber,
   getAllowedFileTypesByChannel,
   getMaxUploadSizeByChannel,
+  extractVariables,
+  renderTemplatePreview,
+  renderTemplateLabel,
+  buildPreviewSegments,
+  isSendableTemplate,
+  hasMediaHeader,
+  isDocumentHeader,
+  getMediaType,
+  getHeaderSubtitle,
+  normalizeWhatsApp,
+  normalizeTwilio,
+  getTemplates,
+  filterTemplatesByQuery,
+  createEmptyFormState,
+  isTemplateComplete,
+  buildTemplateParams,
+  renderTemplateMessage,
+  buildTemplateSendPayload,
+  MEDIA_FORMATS,
 };
+
+export type {
+  WhatsAppTemplateHeaderFormat,
+  WhatsAppTemplateButton,
+  WhatsAppTemplateComponent,
+  WhatsAppMessageTemplate,
+  TwilioContentTemplate,
+  TwilioContentTemplates,
+  TemplatePlatform,
+  NormalizedTemplateHeader,
+  NormalizedTemplateButton,
+  NormalizedTemplate,
+  TemplateButtonParam,
+  WhatsAppProcessedParams,
+  TwilioProcessedParams,
+  TemplateSendParams,
+  TemplateFormState,
+} from './types/template';
+
+export type { PreviewSegment } from './template';
