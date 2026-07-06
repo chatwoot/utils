@@ -1,3 +1,6 @@
+// Neutral WhatsApp/Twilio template types shared by web and mobile.
+// Shapes follow the backend API contract: raw templates in, processed_params out.
+
 export type WhatsAppTemplateHeaderFormat =
   | 'TEXT'
   | 'IMAGE'
@@ -9,7 +12,7 @@ export type WhatsAppTemplateButton = {
   type: 'QUICK_REPLY' | 'URL' | 'PHONE_NUMBER' | 'COPY_CODE' | string;
   text?: string;
   url?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   example?: string[];
 };
 
@@ -18,16 +21,9 @@ export type WhatsAppTemplateComponent =
       type: 'HEADER';
       format?: WhatsAppTemplateHeaderFormat;
       text?: string;
-      example?: { headerHandle?: string[]; headerText?: string[] };
+      example?: Record<string, unknown>;
     }
-  | {
-      type: 'BODY';
-      text: string;
-      example?: {
-        bodyText?: string[][];
-        bodyTextNamedParams?: { paramName: string; example: string }[];
-      };
-    }
+  | { type: 'BODY'; text: string; example?: Record<string, unknown> }
   | { type: 'FOOTER'; text: string }
   | { type: 'BUTTONS'; buttons: WhatsAppTemplateButton[] };
 
@@ -39,17 +35,17 @@ export interface WhatsAppMessageTemplate {
   language: string;
   namespace?: string;
   components: WhatsAppTemplateComponent[];
-  parameterFormat?: 'POSITIONAL' | 'NAMED';
+  parameter_format?: 'POSITIONAL' | 'NAMED';
 }
 
 export interface TwilioContentTemplate {
-  contentSid: string;
-  friendlyName: string;
+  content_sid: string;
+  friendly_name: string;
   language: string;
   category?: string;
   status: string;
-  templateType?: string;
-  mediaType?: string;
+  template_type?: string;
+  media_type?: string;
   body: string;
   variables?: Record<string, string>;
   types?: Record<string, { media?: string[] } & Record<string, unknown>>;
@@ -59,44 +55,7 @@ export interface TwilioContentTemplates {
   templates?: TwilioContentTemplate[];
 }
 
-export type TemplatePlatform = 'whatsapp' | 'twilio';
-
-export type PreviewSegment = { text: string; filled: boolean };
-
-export interface NormalizedTemplateHeader {
-  format: WhatsAppTemplateHeaderFormat;
-  text?: string;
-}
-
-// Button parameters that the in-conversation form collects values for: only URL
-// buttons that embed a `{{ }}` variable and COPY_CODE buttons require a parameter.
-export interface NormalizedTemplateButton {
-  index: number;
-  type: 'url' | 'copy_code';
-  url?: string;
-  variables?: string[];
-}
-
-export interface NormalizedTemplate {
-  id: string;
-  name: string;
-  platform: TemplatePlatform;
-  language: string;
-  category?: string;
-  namespace?: string;
-  body: string;
-  variables: string[];
-  parameterFormat?: 'POSITIONAL' | 'NAMED';
-  header?: NormalizedTemplateHeader;
-  actions?: string[];
-  buttons?: NormalizedTemplateButton[];
-  // Twilio media templates carry the media variable inside `types['twilio/media']`
-  // rather than in a header component.
-  isMediaTemplate?: boolean;
-  mediaVariableKey?: string | null;
-  templateMediaUrl?: string;
-}
-
+// A single WhatsApp button parameter inside processed_params.buttons.
 export interface TemplateButtonParam {
   type: 'url' | 'copy_code';
   parameter: string;
@@ -104,7 +63,7 @@ export interface TemplateButtonParam {
   variables?: string[];
 }
 
-// WhatsApp payload shape: nested body/header/buttons.
+// WhatsApp processed_params: nested body / header / buttons.
 export interface WhatsAppProcessedParams {
   body?: Record<string, string>;
   header?: {
@@ -115,25 +74,7 @@ export interface WhatsAppProcessedParams {
   buttons?: TemplateButtonParam[];
 }
 
-// Twilio payload shape: a flat map keyed by variable token.
+// Twilio processed_params: a flat map keyed by variable token.
 export type TwilioProcessedParams = Record<string, string>;
 
-export interface TemplateSendParams {
-  name: string;
-  category?: string;
-  language: string;
-  namespace?: string;
-  processed_params: WhatsAppProcessedParams | TwilioProcessedParams;
-}
-
-// Mutable form state collected by the in-conversation template form.
-export interface TemplateFormState {
-  // body variable values keyed by variable token
-  bodyValues: Record<string, string>;
-  // WhatsApp media header URL / Twilio media variable value
-  mediaUrl: string;
-  // WhatsApp document header filename (optional)
-  mediaName: string;
-  // WhatsApp button parameters keyed by button index
-  buttonValues: Record<number, string>;
-}
+export type ProcessedParams = WhatsAppProcessedParams | TwilioProcessedParams;
