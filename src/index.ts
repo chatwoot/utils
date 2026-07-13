@@ -12,7 +12,12 @@ import {
   formatNumber,
 } from './helpers';
 
-import { toURL, isSameHost, isValidDomain } from './url';
+import {
+  toURL,
+  isSameHost,
+  isValidDomain,
+  extractFilenameFromUrl,
+} from './url';
 
 import { getRecipients } from './email';
 
@@ -42,6 +47,27 @@ import {
   getMaxUploadSizeByChannel,
 } from './fileUploadRules';
 
+import {
+  MEDIA_FORMATS,
+  COMPONENT_TYPES,
+  findComponentByType,
+  processVariable,
+  extractVariables,
+  renderTemplatePreview,
+  isSendableTemplate,
+  hasMediaHeader,
+  isDocumentHeader,
+  getMediaType,
+  buildWhatsAppProcessedParams,
+  isWhatsAppComplete,
+  isTwilioMediaTemplate,
+  getTwilioMediaUrl,
+  getTwilioMediaVariableKey,
+  buildTwilioProcessedParams,
+  isTwilioComplete,
+  applyTwilioMediaFilename,
+} from './template';
+
 export {
   clamp,
   coerceToDate,
@@ -68,6 +94,7 @@ export {
   toURL,
   isSameHost,
   isValidDomain,
+  extractFilenameFromUrl,
   trimContent,
   downloadFile,
   getFileInfo,
@@ -75,4 +102,24 @@ export {
   formatNumber,
   getAllowedFileTypesByChannel,
   getMaxUploadSizeByChannel,
+  MEDIA_FORMATS,
+  COMPONENT_TYPES,
+  findComponentByType,
+  processVariable,
+  extractVariables,
+  renderTemplatePreview,
+  isSendableTemplate,
+  hasMediaHeader,
+  isDocumentHeader,
+  getMediaType,
+  buildWhatsAppProcessedParams,
+  isWhatsAppComplete,
+  isTwilioMediaTemplate,
+  getTwilioMediaUrl,
+  getTwilioMediaVariableKey,
+  buildTwilioProcessedParams,
+  isTwilioComplete,
+  applyTwilioMediaFilename,
 };
+
+export * from './types/template';

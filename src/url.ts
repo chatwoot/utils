@@ -52,6 +52,26 @@ export const isSameHost = (
 };
 
 /**
+ * Extracts a filename from a URL.
+ * Falls back to a regex match (and finally the original string) when the URL
+ * cannot be parsed by the `URL` constructor.
+ *
+ * @param {string} url - URL to extract the filename from.
+ * @returns {string} The filename, or the original input if none can be derived.
+ */
+export const extractFilenameFromUrl = (url: string): string => {
+  if (!url || typeof url !== 'string') return url;
+  try {
+    const urlObj = new URL(url);
+    const filename = urlObj.pathname.split('/').pop();
+    return filename || url;
+  } catch {
+    const match = url.match(/\/([^/?#]+)(?:[?#]|$)/);
+    return match ? match[1] : url;
+  }
+};
+
+/**
  * Check if a string is a valid domain name.
  * An empty string is allowed and considered valid.
  *
