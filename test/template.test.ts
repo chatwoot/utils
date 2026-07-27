@@ -184,6 +184,22 @@ describe('#buildWhatsAppProcessedParams', () => {
       buildWhatsAppProcessedParams(whatsAppTemplate({ components: [] }))
     ).toEqual({});
   });
+
+  it('builds component-scoped parameters for text header and body variables', () => {
+    const params = buildWhatsAppProcessedParams(
+      whatsAppTemplate({
+        components: [
+          { type: 'HEADER', format: 'TEXT', text: 'Welcome {{1}}' },
+          { type: 'BODY', text: 'Hello {{1}}, your manager is {{2}}.' },
+        ],
+      })
+    );
+
+    expect(params).toEqual({
+      header: { '1': '' },
+      body: { '1': '', '2': '' },
+    });
+  });
 });
 
 describe('#isWhatsAppComplete', () => {
@@ -211,6 +227,23 @@ describe('#isWhatsAppComplete', () => {
     expect(isWhatsAppComplete(plain, buildWhatsAppProcessedParams(plain))).toBe(
       true
     );
+  });
+
+  it('requires text header and body variables', () => {
+    const textHeader = whatsAppTemplate({
+      components: [
+        { type: 'HEADER', format: 'TEXT', text: 'Welcome {{1}}' },
+        { type: 'BODY', text: 'Hello {{1}}, your manager is {{2}}.' },
+      ],
+    });
+    const params = buildWhatsAppProcessedParams(textHeader);
+
+    params.body!['1'] = 'Ahmad';
+    params.body!['2'] = 'Furqan';
+    expect(isWhatsAppComplete(textHeader, params)).toBe(false);
+
+    params.header!['1'] = 'Ahmad';
+    expect(isWhatsAppComplete(textHeader, params)).toBe(true);
   });
 });
 
