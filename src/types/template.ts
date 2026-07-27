@@ -67,8 +67,9 @@ export interface TemplateButtonParam {
 export interface WhatsAppProcessedParams {
   body?: Record<string, string>;
   header?: {
-    media_url: string;
-    media_type: string;
+    [key: string]: string | undefined;
+    media_url?: string;
+    media_type?: string;
     media_name?: string;
   };
   buttons?: TemplateButtonParam[];
