@@ -123,6 +123,13 @@ const bodyHasVariables = (template: WhatsAppMessageTemplate): boolean => {
   return body ? body.text.match(VARIABLE_REGEX) !== null : false;
 };
 
+const textHeaderVariables = (template: WhatsAppMessageTemplate): string[] => {
+  const header = findComponentByType(template, 'HEADER');
+  if (header?.format !== 'TEXT' || !header.text) return [];
+
+  return extractVariables(header.text);
+};
+
 // Collects the URL/COPY_CODE buttons that require a user-supplied parameter,
 // preserving their positional index (sparse array).
 const buildButtonParams = (
@@ -158,8 +165,8 @@ const buildButtonParams = (
 };
 
 /**
- * Builds the empty WhatsApp processed_params scaffold for a template: body keys,
- * a media header block, and the button parameters that need filling.
+ * Builds the empty WhatsApp processed_params scaffold for a template: text or
+ * media header values, body keys, and button parameters that need filling.
  */
 export const buildWhatsAppProcessedParams = (
   template: WhatsAppMessageTemplate
@@ -167,13 +174,11 @@ export const buildWhatsAppProcessedParams = (
   const params: WhatsAppProcessedParams = {};
 
   const body = findComponentByType(template, 'BODY');
-  if (!body) return params;
-
-  const matchedVariables = body.text.match(VARIABLE_REGEX);
-  if (matchedVariables) {
+  const bodyVariables = body ? extractVariables(body.text) : [];
+  if (bodyVariables.length > 0) {
     const bodyParams: Record<string, string> = {};
-    matchedVariables.forEach(variable => {
-      bodyParams[processVariable(variable)] = '';
+    bodyVariables.forEach(variable => {
+      bodyParams[variable] = '';
     });
     params.body = bodyParams;
   }
@@ -182,6 +187,14 @@ export const buildWhatsAppProcessedParams = (
     const format = getMediaType(template);
     params.header = { media_url: '', media_type: format };
     if (format === 'document') params.header.media_name = '';
+  } else {
+    const headerVariables = textHeaderVariables(template);
+    if (headerVariables.length > 0) {
+      params.header = {};
+      headerVariables.forEach(variable => {
+        params.header![variable] = '';
+      });
+    }
   }
 
   const buttons = buildButtonParams(template);
@@ -191,22 +204,27 @@ export const buildWhatsAppProcessedParams = (
 };
 
 /**
- * Whether every required WhatsApp input has been filled. A template with no body
- * variables and no media header is considered complete even if it has buttons
- * (mirrors the composer's validation).
+ * Whether every required WhatsApp input has been filled. A template with no
+ * text variables and no media header is considered complete even if it has
+ * buttons (mirrors the composer's validation).
  */
 export const isWhatsAppComplete = (
   template: WhatsAppMessageTemplate,
   processedParams: WhatsAppProcessedParams
 ): boolean => {
-  const hasVariables = bodyHasVariables(template);
+  const hasBodyVariables = bodyHasVariables(template);
+  const headerVariables = textHeaderVariables(template);
   const media = hasMediaHeader(template);
 
-  if (!hasVariables && !media) return true;
+  if (!hasBodyVariables && headerVariables.length === 0 && !media) return true;
 
   if (media && !processedParams.header?.media_url) return false;
 
-  if (hasVariables && processedParams.body) {
+  if (headerVariables.some(variable => !processedParams.header?.[variable])) {
+    return false;
+  }
+
+  if (hasBodyVariables && processedParams.body) {
     const hasEmptyBodyVariable = Object.keys(processedParams.body).some(
       key => !processedParams.body?.[key]
     );
