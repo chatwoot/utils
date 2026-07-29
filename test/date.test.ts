@@ -72,14 +72,14 @@ describe('coerceToDate', () => {
   });
 
   describe('simple date string inputs', () => {
-    it('should handle simple date strings and set time to 00:00:00', () => {
+    it('should handle simple date strings and set time to 00:00:00 UTC', () => {
       const dateString = '2025-06-01';
       const result = coerceToDate(dateString);
       expect(result).toBeInstanceOf(Date);
-      expect(result?.getHours()).toBe(0);
-      expect(result?.getMinutes()).toBe(0);
-      expect(result?.getSeconds()).toBe(0);
-      expect(result?.getMilliseconds()).toBe(0);
+      expect(result?.getUTCHours()).toBe(0);
+      expect(result?.getUTCMinutes()).toBe(0);
+      expect(result?.getUTCSeconds()).toBe(0);
+      expect(result?.getUTCMilliseconds()).toBe(0);
     });
 
     it('should handle date strings with slashes', () => {
