@@ -41,7 +41,7 @@ export function getRecipients(
       cc: email?.cc || [],
       bcc: email?.bcc || [],
       from: email?.from || [],
-      to: [],
+      to: email?.to || [],
     };
   } else {
     const {

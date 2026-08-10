@@ -9,15 +9,17 @@ const createIncomingEmail = ({
   from = [],
   cc = [],
   bcc = [],
+  to = [],
 }: {
   from?: string[];
   cc?: string[];
   bcc?: string[];
+  to?: string[];
 }) => {
   return {
     message_type: MessageType.INCOMING,
     content_attributes: {
-      email: { from, cc, bcc },
+      email: { from, cc, bcc, to },
     },
   } as IncomingEmailMessage;
 };
@@ -154,6 +156,52 @@ describe('getRecipients', () => {
         );
         expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
         expect(result.cc.length).toBeGreaterThanOrEqual(ccEmails.length); // Ensure we have at least the ccEmails
+      });
+    });
+
+    describe('To Recipients', () => {
+      test('should add extra emails in the "to" field to the "cc" array', () => {
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          to: [inboxEmail, 'colleague@example.com'],
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toContain('colleague@example.com');
+        expect(result.cc).not.toContain(inboxEmail);
+      });
+
+      test('should keep "to" recipients alongside existing "cc" recipients', () => {
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          to: [inboxEmail, 'colleague@example.com'],
+          cc: ['cc1@example.com'],
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual(
+          expect.arrayContaining(['cc1@example.com', 'colleague@example.com'])
+        );
+      });
+
+      test('should not error when to is null', () => {
+        // @ts-ignore
+        const lastEmail = createIncomingEmail({ from: ['a@b.com'], to: null });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual(['a@b.com']);
       });
     });
 
