@@ -50,6 +50,7 @@ describe('uploadRules helper', () => {
       expect(accept).toContain('video/mp4');
       expect(accept).toContain('video/webm');
       expect(accept).toContain('audio/mp4');
+      expect(accept).toContain('application/pdf');
     });
 
     it('returns Line specific accept list', () => {
@@ -165,6 +166,12 @@ describe('uploadRules helper', () => {
         getMaxUploadSizeByChannel({
           channelType: INBOX_TYPES.INSTAGRAM,
           mime: 'audio/wav',
+        })
+      ).toBe(25);
+      expect(
+        getMaxUploadSizeByChannel({
+          channelType: INBOX_TYPES.INSTAGRAM,
+          mime: 'application/pdf',
         })
       ).toBe(25);
     });
