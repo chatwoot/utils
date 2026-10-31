@@ -41,7 +41,7 @@ export function getRecipients(
       cc: email?.cc || [],
       bcc: email?.bcc || [],
       from: email?.from || [],
-      to: [],
+      to: email?.to || [],
     };
   } else {
     const {
@@ -100,11 +100,15 @@ export function getRecipients(
   // - Remove inbox and forward-to email to prevent loops
   // - Remove emails matching the reply UUID pattern
   const replyUUIDPattern = /^reply\+([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+  // Senders may write the inbox address in any case, e.g. HELLO@example.com
+  const inboxEmails = [inboxEmail, forwardToEmail].map(email =>
+    email?.toLowerCase()
+  );
   cc = cc.filter(email => {
     if (email === conversationContact && isLastEmailFromContact) {
       return false;
     }
-    if (email === inboxEmail || email === forwardToEmail) {
+    if (inboxEmails.includes(email.toLowerCase())) {
       return false;
     }
     if (replyUUIDPattern.test(email)) {
