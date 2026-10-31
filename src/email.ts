@@ -111,6 +111,9 @@ export function getRecipients(
     if (inboxEmails.includes(email.toLowerCase())) {
       return false;
     }
+    if (to.includes(email)) {
+      return false;
+    }
     if (replyUUIDPattern.test(email)) {
       return false;
     }

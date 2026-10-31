@@ -188,6 +188,21 @@ describe('getRecipients', () => {
         );
         expect(result.cc).toEqual([]);
       });
+
+      test('should not add the sender to cc when they are also in "to"', () => {
+        const lastEmail = createIncomingEmail({
+          from: ['sender@example.com'],
+          to: [inboxEmail, 'sender@example.com'],
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual(['sender@example.com']);
+        expect(result.cc).toEqual([conversationContact]);
+      });
     });
 
     describe('BCC Recipients', () => {
