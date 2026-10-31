@@ -7,17 +7,19 @@ import {
 
 const createIncomingEmail = ({
   from = [],
+  to = [],
   cc = [],
   bcc = [],
 }: {
   from?: string[];
+  to?: string[];
   cc?: string[];
   bcc?: string[];
 }) => {
   return {
     message_type: MessageType.INCOMING,
     content_attributes: {
-      email: { from, cc, bcc },
+      email: { from, to, cc, bcc },
     },
   } as IncomingEmailMessage;
 };
@@ -154,6 +156,37 @@ describe('getRecipients', () => {
         );
         expect(result.cc).toEqual(expect.arrayContaining(ccEmails));
         expect(result.cc.length).toBeGreaterThanOrEqual(ccEmails.length); // Ensure we have at least the ccEmails
+      });
+    });
+
+    describe('To Recipients', () => {
+      test('should add other "to" recipients to cc, excluding the inbox email', () => {
+        const lastEmail = createIncomingEmail({
+          from: [conversationContact],
+          to: [inboxEmail, 'teammate@example.com'],
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.to).toEqual([conversationContact]);
+        expect(result.cc).toEqual(['teammate@example.com']);
+      });
+
+      test('should exclude the inbox email from cc regardless of case', () => {
+        const lastEmail = createIncomingEmail({
+          from: [conversationContact],
+          to: ['INBOX@EXAMPLE.COM'],
+        });
+        const result = getRecipients(
+          lastEmail,
+          conversationContact,
+          inboxEmail,
+          forwardToEmail
+        );
+        expect(result.cc).toEqual([]);
       });
     });
 
