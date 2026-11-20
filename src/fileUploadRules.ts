@@ -149,8 +149,9 @@ const CHANNEL_CONFIGS: ChannelConfigs = {
         audio: ['aac', 'm4a', 'wav', 'mp4'],
         image: ['png', 'jpeg', 'gif'],
         video: ['mp4', 'ogg', 'avi', 'mov', 'webm'],
+        application: ['pdf'],
       },
-      maxByCategory: { image: 16, video: 25, audio: 25 },
+      maxByCategory: { image: 16, video: 25, audio: 25, document: 25 },
     },
   },
 
